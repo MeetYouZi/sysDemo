@@ -7,7 +7,6 @@ Vue.use(Router);
 const Home = () => import("@/components/common/Home");
 const Login = () => import("@/views/login/Login");
 const Index = () => import("@/views/admin/index/index");
-const store = () => import("@/views/admin/store/store");
 
 export default new Router({
   mode: "hash",
@@ -27,11 +26,6 @@ export default new Router({
           path: "/Home",
           component: Index,
           meta: { title: "首页" }
-        },
-        {
-          path: "/store",
-          component: store,
-          meta: { title: "门店管理" }
         }
       ]
     },
