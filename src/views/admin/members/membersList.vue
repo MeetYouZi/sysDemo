@@ -15,10 +15,10 @@
         <div class="searchInput">
           <el-select v-model="levelId" placeholder="请选择" clearable>
             <el-option
-                    v-for="item in levelTypeList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
+                    v-for="item in levelList"
+                    :key="item.id"
+                    :label="item.levelName"
+                    :value="item.id">
             </el-option>
           </el-select>
         </div>
@@ -68,7 +68,7 @@ export default {
       nickName: '',
       phone: '',
       levelId: '',
-      levelTypeList: [],
+      levelList: [],
       userList: []
     }
   },
@@ -80,17 +80,18 @@ export default {
         phone: this.phone,
         levelId: this.levelId
       }
-      this.$axios('/backManage/getUserList', data, res =>{
-        this.totalNum = res.data.total
-        this.userList = res.data.userList
-      },this)
+      this.$axios.getUserList(data)
+        .then( res => {
+          this.totalNum = res.data.total
+          this.userList = res.data.userList
+        })
     },
     // 获取等级列表
     getLevelList(){
-      this.$axios('/backManage/getUserList', {}, res =>{
-        this.totalNum = res.data.total
-        this.userList = res.data.userList
-      },this)
+      this.$axios.getLevelList()
+          .then( res => {
+              this.levelList = res.data.levelList
+          })
     }
   },
   created (){

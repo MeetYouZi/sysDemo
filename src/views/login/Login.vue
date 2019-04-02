@@ -36,8 +36,8 @@
 </template>
 
 <script>
-import md5 from 'js-md5'
-import { mapMutations } from 'vuex'
+import md5 from "js-md5";
+import { mapMutations } from "vuex";
 export default {
   data: function() {
     return {
@@ -61,20 +61,18 @@ export default {
             account: this.ruleForm.username,
             password: md5(this.ruleForm.password)
           };
-          this.$axios("/backManage/login", data, res => {
-            localStorage.setItem("ms_username", res.data.user.userName)
-            this.changeToken(res.data.token)
-            console.log( res.data.token,'res.data.token')
-            console.log(this.$store.state.token)
+          this.$axios.login(data).then(res => {
+            localStorage.setItem("ms_username", res.data.user.userName);
+            this.changeToken(res.data.token);
             this.$router.push("/home");
-          }, this);
+          });
         } else {
           console.log("error submit!!");
           return false;
         }
       });
     },
-    ...mapMutations(['changeToken'])
+    ...mapMutations(["changeToken"])
   }
 };
 </script>
