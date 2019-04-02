@@ -14,7 +14,7 @@
         <template v-if="item.subs">
           <el-submenu :index="item.index" :key="item.index">
             <template slot="title">
-              <!-- <i :class="item.icon"></i> -->
+               <i :class="item.icon"></i>
               <span slot="title">{{ item.title }}</span>
             </template>
             <template v-for="subItem in item.subs">
@@ -40,7 +40,7 @@
         </template>
         <template v-else>
           <el-menu-item :index="item.index" :key="item.index">
-            <!-- <i :class="item.icon"></i> -->
+             <i :class="item.icon"></i>
             <span slot="title">{{ item.title }}</span>
           </el-menu-item>
         </template>
@@ -58,32 +58,95 @@ export default {
       collapse: false,
       items: [
         {
-          icon: "el-icon-lx-home",
-          index: "Home",
-          title: "平台概览"
+          icon: "el-icon-menu",
+          index: "home",
+          title: "首页"
         },
         {
-          icon: "el-icon-lx-cascades",
-          index: "store",
-          title: "门店管理"
-        },
-        {
-          icon: "el-icon-lx-copy",
-          index: "allUser",
-          title: "人员管理",
+          icon: "el-icon-date",
+          index: "members",
+          title: "会员管理",
           subs: [
             {
-              index: "jionUser",
-              title: "加盟者管理"
+              index: "membersList",
+              title: "会员列表"
             },
             {
-              index: "clerk",
-              title: "职员管理"
+              index: "level",
+              title: "等级管理"
+            },
+            {
+              index: "integral",
+              title: "积分记录"
+            },
+            {
+              index: "withdrawal",
+              title: "用户提现申请"
             }
-            // {
-            //   index: "salesman",
-            //   title: "业务员管理"
-            // }
+          ]
+        },
+        {
+          icon: "el-icon-goods",
+          index: "product",
+          title: "商品管理",
+          subs: [
+            {
+              index: "productList",
+              title: "商品列表"
+            },
+            {
+              index: "classification",
+              title: "商品分类"
+            }
+          ]
+        },
+        {
+          icon: "el-icon-document",
+          index: "orderList",
+          title: "订单管理",
+        },
+        {
+          icon: "el-icon-printer",
+          index: "sampleList",
+          title: "绑定样品管理",
+        },
+        {
+          icon: "el-icon-rank",
+          index: "package",
+          title: "套餐管理",
+          subs: [
+            {
+              index: "packageList",
+              title: "套餐列表"
+            },
+            {
+              index: "packageRecord",
+              title: "套餐购买记录"
+            },
+            {
+              index: "packageCode",
+              title: "资格码生成"
+            }
+          ]
+        },
+        {
+          icon: "el-icon-tickets",
+          index: "couponsList",
+          title: "优惠券列表",
+        },
+        {
+          icon: "el-icon-setting",
+          index: "set",
+          title: "设置",
+          subs: [
+            {
+              index: "bannerList",
+              title: "首页轮播图"
+            },
+            {
+              index: "modify",
+              title: "修改密码"
+            }
           ]
         }
       ]

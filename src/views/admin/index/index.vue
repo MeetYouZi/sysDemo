@@ -11,21 +11,15 @@
         </el-option>
       </el-select>
     </div>
-    <orderNum></orderNum>
-    <chart-histogram></chart-histogram>
-    <chart-histogram></chart-histogram>
+
   </div>
 </template>
 <script>
 import headerBox from "./components/headerBox"
-import orderNum from "./components/orderNum"
-import chartHistogram from "./components/chartHistogram"
 export default {
   name: "all",
   components: {
     headerBox,
-    orderNum,
-    chartHistogram
   },
   data() {
     return {

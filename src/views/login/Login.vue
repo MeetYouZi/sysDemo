@@ -11,7 +11,7 @@
       >
         <el-form-item prop="username">
           <el-input v-model="ruleForm.username" placeholder="username">
-            <el-button slot="prepend" icon="el-icon-lx-people"></el-button>
+            <el-button slot="prepend" icon="el-icon-mobile-phone"></el-button>
           </el-input>
         </el-form-item>
         <el-form-item prop="password">
@@ -21,7 +21,7 @@
             v-model="ruleForm.password"
             @keyup.enter.native="submitForm('ruleForm')"
           >
-            <el-button slot="prepend" icon="el-icon-lx-lock"></el-button>
+            <el-button slot="prepend" icon="el-icon-view"></el-button>
           </el-input>
         </el-form-item>
         <div class="login-btn">
@@ -36,12 +36,14 @@
 </template>
 
 <script>
+import md5 from 'js-md5'
+import { mapMutations } from 'vuex'
 export default {
   data: function() {
     return {
       ruleForm: {
         username: "admin",
-        password: "123123"
+        password: ""
       },
       rules: {
         username: [
@@ -55,14 +57,24 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          localStorage.setItem("ms_username", this.ruleForm.username);
-          this.$router.push("/");
+          let data = {
+            account: this.ruleForm.username,
+            password: md5(this.ruleForm.password)
+          };
+          this.$axios("/backManage/login", data, res => {
+            localStorage.setItem("ms_username", res.data.user.userName)
+            this.changeToken(res.data.token)
+            console.log( res.data.token,'res.data.token')
+            console.log(this.$store.state.token)
+            this.$router.push("/home");
+          }, this);
         } else {
           console.log("error submit!!");
           return false;
         }
       });
-    }
+    },
+    ...mapMutations(['changeToken'])
   }
 };
 </script>

@@ -41,12 +41,13 @@
 </template>
 <script>
 import bus from "common/bus";
+import { mapMutations } from 'vuex'
 export default {
   data() {
     return {
       collapse: false,
       fullscreen: false,
-      name: "linxin",
+      name: "柚子",
       message: 2
     };
   },
@@ -60,10 +61,12 @@ export default {
     // 用户名下拉菜单选择事件
     handleCommand(command) {
       if (command == "loginout") {
-        localStorage.removeItem("ms_username");
+        localStorage.clear();
+        this.changeToken('')
         this.$router.push("/login");
       }
     },
+    ...mapMutations(['changeToken']),
     // 侧边栏折叠
     collapseChage() {
       this.collapse = !this.collapse;

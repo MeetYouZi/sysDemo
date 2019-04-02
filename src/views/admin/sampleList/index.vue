@@ -1,13 +1,11 @@
 <template>
-  <div>
-
-  </div>
+  <div>绑定样式</div>
 </template>
 
 <script>
-export default {
-  name: "all"
-};
+  export default {
+    name: 'index'
+  }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus" scoped>
