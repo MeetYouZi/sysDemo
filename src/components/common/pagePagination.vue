@@ -37,6 +37,7 @@ export default {
   methods: {
     handleCurrentChange(val) {
       this.currentPage = val;
+      this.$emit('handleCurrentChange', this.currentPage)
     }
   }
 };

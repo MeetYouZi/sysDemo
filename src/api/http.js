@@ -36,7 +36,6 @@ const errorHandle = (status, other) => {
   switch (status) {
     // 301: 正常错误
     case '301':
-        console.log('301')
         Message.error(other);
       break;
     // 403 token过期
@@ -54,6 +53,7 @@ const errorHandle = (status, other) => {
       this.$message.error("请求的资源不存在");
       break;
     default:
+      Message.error("发生一个错误");
       console.log(other);
   }
 };
