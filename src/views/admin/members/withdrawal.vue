@@ -46,7 +46,20 @@
           </template>
         </el-table-column>
         <el-table-column prop="handleTime" label="处理时间"> </el-table-column>
-
+        <el-table-column fixed="right" label="处理" width="300">
+          <template slot-scope="scope">
+            <el-button
+                    type="primary"
+                    size="small"
+                    @click="hangdleDispose(scope.row)"
+            >处理</el-button>
+            <el-button
+                    type="danger"
+                    size="small"
+                    @click="hangdleEdit(scope.row)"
+            >拒绝</el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <page-pagination
         :total="totalNum"
@@ -77,6 +90,10 @@ export default {
     };
   },
   methods: {
+    // 处理操作
+    hangdleDispose(){
+
+    },
     // 翻页
     handleCurrentChange(val) {
       this.pageNum = val;

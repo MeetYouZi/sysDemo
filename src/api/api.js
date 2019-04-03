@@ -28,17 +28,17 @@ const http = {
   withdrawApplyList(data) {
     return axios.post("/backManage/withdrawApplyList", JSON.stringify(data));
   },
+  // 添加/修改 用户等级
+  saveLevel(data) {
+    return axios.post("/backManage/saveLevel", JSON.stringify(data));
+  },
+  // 获取所有优惠券
+  allCouponList(data) {
+    return axios.post("/backManage/allCouponList", JSON.stringify(data));
+  },
   // 添加商品分类
   addCategory(data) {
     return axios.post("/backManage/addCategory", JSON.stringify(data));
-  },
-  // 添加用户等级
-  addLevelInfo(data) {
-    return axios.post("/backManage/addLevelInfo", JSON.stringify(data));
-  },
-  // 修改用户等级
-  updateLevelInfo(data) {
-    return axios.post("/backManage/updateLevelInfo", JSON.stringify(data));
   },
   // 新增商品
   addItem(data) {
