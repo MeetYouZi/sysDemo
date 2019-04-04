@@ -68,6 +68,20 @@
         @handleCurrentChange="handleCurrentChange"
       ></page-pagination>
     </div>
+    <el-dialog title="拒绝处理" :visible.sync="dialogFormVisible">
+      <el-form :model="form">
+        <el-form-item label="拒绝原因" :label-width="formLabelWidth">
+          <el-input v-model="form.remark" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="备注" :label-width="formLabelWidth">
+          <el-input v-model="form.reason" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleClickPass">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -86,13 +100,53 @@ export default {
       nickName: "",
       phone: "",
       userId: "",
-      withdrawApplyList: []
+      formLabelWidth: '120px',
+      dialogFormVisible: false,
+      withdrawApplyList: [],
+      form: {}
     };
   },
   methods: {
+    //拒绝
+    hangdleEdit(row){
+      this.form.id = row.id
+      this.dialogFormVisible = true
+    },
+    handleClickPass(){
+      let data = {
+        id: this.form.id,
+        handleResult: 2,
+        remark: this.form.remark,
+        reason: this.form.reason
+      }
+      this.handleWithdraw(data)
+    },
     // 处理操作
-    hangdleDispose(){
+    hangdleDispose(row){
+      let data = {
+        id: row.id,
+        handleResult: 1,
+      }
+      let msgText = '确定同意该用户提现吗？'
+      this.$confirm(msgText, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.handleWithdraw(data)
+      }).catch(() => {
 
+      });
+    },
+    handleWithdraw(data){
+      this.$axios.handleWithdraw(data).then( () =>{
+        this.getApplyList(1)
+        this.dialogFormVisible = false
+        this.$message({
+          type: 'success',
+          message: '操作成功!'
+        });
+      })
     },
     // 翻页
     handleCurrentChange(val) {

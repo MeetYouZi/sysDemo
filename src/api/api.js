@@ -28,6 +28,10 @@ const http = {
   withdrawApplyList(data) {
     return axios.post("/backManage/withdrawApplyList", JSON.stringify(data));
   },
+  // 处理用户提现申请
+  handleWithdraw(data) {
+    return axios.post("/backManage/handleWithdraw", JSON.stringify(data));
+  },
   // 添加/修改 用户等级
   saveLevel(data) {
     return axios.post("/backManage/saveLevel", JSON.stringify(data));
@@ -35,6 +39,10 @@ const http = {
   // 获取所有优惠券
   allCouponList(data) {
     return axios.post("/backManage/allCouponList", JSON.stringify(data));
+  },
+  // 商品列表
+  itemList(data) {
+    return axios.post("/backManage/itemList", JSON.stringify(data));
   },
   // 添加商品分类
   addCategory(data) {
