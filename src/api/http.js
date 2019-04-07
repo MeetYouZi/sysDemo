@@ -41,7 +41,7 @@ const errorHandle = (status, other) => {
     // 403 token过期
     // 清除token并跳转登录页
     case '403':
-      this.$message.error("登录过期，请重新登录");
+      Message.error("登录过期，请重新登录");
       localStorage.removeItem("token");
       store.commit("loginSuccess", null);
       setTimeout(() => {
@@ -50,7 +50,7 @@ const errorHandle = (status, other) => {
       break;
     // 404请求不存在
     case '404':
-      this.$message.error("请求的资源不存在");
+      Message.error("请求的资源不存在");
       break;
     default:
       Message.error("发生一个错误");
@@ -67,7 +67,6 @@ var instance = axios.create({
     token: token
   }
 });
-
 instance.interceptors.request.use(
   config => {
     config.headers.token = `Bearer ${store.state.token}`;
@@ -77,7 +76,7 @@ instance.interceptors.request.use(
     });
     // setTimeout(() => {
     //   loadinginstace.close();
-    // }, 3000);
+    // }, 6000);
     return config;
   },
   error => {

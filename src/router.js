@@ -18,6 +18,7 @@ const sampleList = () => import("@/views/admin/sampleList/index");
 const packageList = () => import("@/views/admin/package/packageList");
 const packageRecord = () => import("@/views/admin/package/packageRecord");
 const packageCode = () => import("@/views/admin/package/packageCode");
+const packCodeList = () => import("@/views/admin/package/packCodeList");
 const couponsList = () => import("@/views/admin/couponsList/index");
 const bannerList = () => import("@/views/admin/set/bannerList");
 const modify = () => import("@/views/admin/set/modify");
@@ -90,6 +91,11 @@ export default new Router({
           path: "/packageRecord",
           component: packageRecord,
           meta: { title: "套餐购买记录" }
+        },
+        {
+          path: "/packCodeList",
+          component: packCodeList,
+          meta: { title: "资格码列表" }
         },
         {
           path: "/packageCode",

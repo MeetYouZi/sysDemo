@@ -326,7 +326,8 @@ export default {
       this.$axios.getLevelList().then(res => {
         this.levelList = res.data.levelList;
       });
-    }, // 获取优惠券列表
+    },
+    // 获取优惠券列表
     allCouponList() {
       this.$axios.allCouponList({}).then(res => {
         this.couponList = res.data.couponList;

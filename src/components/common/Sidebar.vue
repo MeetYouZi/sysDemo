@@ -124,9 +124,13 @@ export default {
               title: "套餐购买记录"
             },
             {
-              index: "packageCode",
-              title: "资格码生成"
+              index: "packCodeList",
+              title: "资格码列表"
             }
+            // {
+            //   index: "packageCode",
+            //   title: "资格码生成"
+            // }
           ]
         },
         {
