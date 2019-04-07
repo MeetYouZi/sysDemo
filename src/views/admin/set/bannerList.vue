@@ -156,4 +156,6 @@ export default {
 <style lang="stylus" rel="stylesheet/stylus" scoped>
 .el-input
   width 300px
+.el-icon-error
+  line-height 40px
 </style>
