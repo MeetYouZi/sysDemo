@@ -34,7 +34,7 @@
         </el-table-column>
         <el-table-column prop="itemState" label="商品状态">
           <template slot-scope="scope">
-            {{ scope.row.itemState == 1 ? "下架" : "商家" }}
+            {{ scope.row.itemState == 1 ? "下架" : "上架" }}
           </template>
         </el-table-column>
         <el-table-column prop="carriageExpense" label="运费" width="180">
@@ -50,7 +50,7 @@
             <el-button
               type="primary"
               size="small"
-              @click="hangdleEdit(scope.row, true)"
+              @click="hangdleDetail(scope.row)"
               >详情</el-button
             >
             <el-button
@@ -71,8 +71,8 @@
       ></page-pagination>
     </div>
     <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" width="800px">
-      <el-form :model="productForm">
-        <el-form-item label="商品名称" :label-width="formLabelWidth">
+      <el-form :model="productForm" :rules="rules" ref="productForm">
+        <el-form-item label="商品名称" :label-width="formLabelWidth" prop="itemName">
           <el-input v-model="productForm.itemName" :disabled="isEdit" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="图片大图" :label-width="formLabelWidth">
@@ -83,7 +83,7 @@
           <!--<el-input v-model="productForm.detail" autocomplete="off"></el-input>-->
           <vue-upload-img @uploadSuccess="uploadDetailSuccess" :limitNum="1" :disabled="isEdit" :file-list="detailImage"></vue-upload-img>
         </el-form-item>
-        <el-form-item label="一级分类" :label-width="formLabelWidth">
+        <el-form-item label="一级分类" :label-width="formLabelWidth" prop="parentCategoryId">
           <!--<el-input v-model="productForm.parentCategoryId" autocomplete="off"></el-input>-->
           <el-select v-model="parentCategoryIndex" @change="selectParentCategory" :disabled="isEdit" placeholder="请选择">
             <el-option
@@ -94,7 +94,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="二级分类" :label-width="formLabelWidth">
+        <el-form-item label="二级分类" :label-width="formLabelWidth" prop="categoryId">
           <!--<el-input v-model="productForm.categoryId" autocomplete="off"></el-input>-->
           <el-select v-model="productForm.categoryId" @change="selectcategoryId" :disabled="isEdit" placeholder="请选择">
             <el-option
@@ -105,13 +105,13 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="库存数量" :label-width="formLabelWidth">
+        <el-form-item label="库存数量" :label-width="formLabelWidth" prop="stock">
           <el-input v-model="productForm.stock" :disabled="isEdit" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="邮费" :label-width="formLabelWidth">
+        <el-form-item label="邮费" :label-width="formLabelWidth" prop="carriageExpense">
           <el-input v-model="productForm.carriageExpense" :disabled="isEdit" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="是否在首页显示" :label-width="formLabelWidth">
+        <el-form-item label="是否在首页显示" :label-width="formLabelWidth" prop="homeShow">
           <!--<el-input v-model="productForm.homeShow" autocomplete="off"></el-input>-->
           <el-radio :disabled="isEdit" v-model="productForm.homeShow" label="1">是</el-radio>
           <el-radio :disabled="isEdit" v-model="productForm.homeShow" label="0">否</el-radio>
@@ -125,7 +125,7 @@
         </el-form-item>
         <el-form-item label="会员单价" :label-width="formLabelWidth">
           <!--<el-input v-model="productForm.priceArray" autocomplete="off"></el-input>-->
-          <el-button type="primary" @click="addPriceArray" :disabled="isEdit" plain>添加会员单价</el-button>
+          <!--<el-button type="primary" @click="addPriceArray" :disabled="isEdit" plain>添加会员单价</el-button>-->
         </el-form-item>
           <!--<el-input v-model="productForm.priceArray" autocomplete="off"></el-input>-->
         <div v-for="(item,index) in priceArray" :key="index">
@@ -134,7 +134,7 @@
               <el-select
                       v-model="item.levelId"
                       placeholder="选择会员等级"
-                      :disabled="isEdit"
+                      :disabled="true"
               >
                 <el-option
                         v-for="item2 in levelList"
@@ -151,17 +151,77 @@
               <el-input v-model="item.price" :disabled="isEdit" autocomplete="off"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="2" v-if="!isEdit">
-            <i
-              class="el-icon-error"
-              @click="delPriceArray(index)"
-            ></i>
-          </el-col>
+          <!--<el-col :span="2" v-if="!isEdit">-->
+            <!--<i-->
+              <!--class="el-icon-error"-->
+              <!--@click="delPriceArray(index)"-->
+            <!--&gt;</i>-->
+          <!--</el-col>-->
         </div>
     </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitSaveItem">确 定</el-button>
+        <el-button type="primary" @click="submitSaveItem('productForm')">确 定</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="详情" :visible.sync="dialogDetailVisible" >
+      <el-row :gutter="20">
+        <el-col :span="4"><div class="grid-content bg-purple text-right">商品大图</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple text-left">
+          <img width="90" height="90" :src="detail.bigImage"/>
+        </div></el-col>
+        <el-col :span="4"><div class="grid-content bg-purple text-right">等级名称</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.itemName}}</div></el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="4"><div class="grid-content bg-purple text-right">商品轮播图</div></el-col>
+        <el-col :span="16"><div class="grid-content bg-purple text-left">
+          <img width="90" height="90" v-for="item in detail.bannerImageList" :key="item" :src="item"/>
+        </div></el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="4"><div class="grid-content bg-purple text-right">详情图片地址</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple text-left">
+          <img width="90" height="90" :src="detail.detail"/>
+        </div></el-col>
+        <el-col :span="4"><div class="grid-content bg-purple text-right">商品父分类</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.parentCategoryId}}</div></el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="4"><div class="grid-content bg-purple text-right">子分类</div></el-col>
+        <el-col :span="18"><div class="grid-content bg-purple text-left">{{detail.categoryId}}</div></el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="4"><div class="grid-content bg-purple text-right">商品状态</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.itemState == 0 ? '上架' : '下架'}}</div></el-col>
+        <el-col :span="4"><div class="grid-content bg-purple text-right">运费</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.carriageExpense == 0 ? '免邮' : detail.carriageExpense}}</div></el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="4"><div class="grid-content bg-purple text-right">库存</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.stock}}</div></el-col>
+        <el-col :span="4"><div class="grid-content bg-purple text-right">是否首页显示</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.homeShow == 0 ? '否' : '是'}}</div></el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="4"><div class="grid-content bg-purple text-right">首页描述</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.homeDesc}}</div></el-col>
+        <el-col :span="4"><div class="grid-content bg-purple text-right">销量</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.saleNum}}</div></el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="4"><div class="grid-content bg-purple text-right"></div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple text-left">所有会员价格</div></el-col>
+
+      </el-row>
+      <el-row :gutter="20" v-for="(item,index) in detail.userPriceList" :key="index">
+        <el-col :span="4"><div class="grid-content bg-purple text-right">会员名称</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple text-left">{{item.levelName}}</div></el-col>
+        <el-col :span="4"><div class="grid-content bg-purple text-right">价格</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple text-left">{{item.price}}</div></el-col>
+      </el-row>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogDetailVisible = false">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -203,12 +263,38 @@ export default {
       chilItemCategory: [],
       priceArray: [],
       dialogFormVisible: false,
+      dialogDetailVisible: false,
+      detail: {},
       parentCategoryIndex: 0,
       bigImage: [],
       detailImage: [],
       bannerImage: [],
       dialogTitle: '编辑',
-      isEdit: false
+      isEdit: false,
+      rules:{
+        itemName: [
+          { required: true, message: '请输入商品名称', trigger: 'blur' }
+        ],
+        parentCategoryId: [
+          { required: true, message: '请选择一级分类', trigger: 'change' }
+        ],
+        categoryId: [
+          { required: true, message: '请选择二级分类', trigger: 'change' }
+        ],
+        stock: [
+          { required: true, message: '请输入库存', trigger: 'blur' }
+        ],
+        carriageExpense: [
+          { required: true, message: '请输入邮费', trigger: 'blur' }
+        ],
+        homeShow: [
+          { required: true, message: '请选择是否在首页显示', trigger: 'blur' }
+        ],
+        priceArray: [
+          { required: true, message: '输入商品价格', trigger: 'blur' }
+        ]
+
+      }
     };
   },
   methods: {
@@ -216,6 +302,11 @@ export default {
     handleCurrentChange(val) {
       this.pageNum = val;
       this.getUserList(val);
+    },
+    hangdleDetail(row){
+      this.detail = row
+      this.detail.bannerImageList = row.bannerImage.split(',')
+      this.dialogDetailVisible= true
     },
     // 编辑
     hangdleEdit(row, isEdit) {
@@ -268,7 +359,13 @@ export default {
       this.dialogTitle = '新增'
       this.dialogFormVisible = true
       this.parentCategoryIndex = 0
-      this.priceArray = []
+      // this.priceArray = []
+      this.levelList.forEach(item =>{
+        this.priceArray.push({
+          levelId: item.id,
+          price: '0'
+        })
+      })
       this.bigImage = []
       this.detailImage= []
       this.bannerImage= []
@@ -279,25 +376,38 @@ export default {
       }
     },
     // 修改
-    submitSaveItem(){
-      let data = {
-        itemId: this.productForm.itemId,
-        itemName: this.productForm.itemName,
-        bigImage: this.productForm.bigImage,
-        bannerImage: this.productForm.bannerImage,
-        detail: this.productForm.detail,
-        parentCategoryId: this.productForm.parentCategoryId,
-        categoryId: this.productForm.categoryId,
-        stock: this.productForm.stock,
-        carriageExpense: this.productForm.carriageExpense,
-        homeShow: this.productForm.homeShow,
-        homeDesc: this.productForm.homeDesc,
-        priceArray: this.priceArray,
-      };
-      this.$axios.saveItem(data).then(res => {
-        this.dialogFormVisible = false
-        this.$message.success('操作成功！')
-        this.getItemList(1);
+    submitSaveItem(formName){
+
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          if(!this.productForm.bigImage){
+            return this.$message.error('请上传图片大图')
+          }
+          if(!this.productForm.bigImage){
+            return this.$message.error('请上传图片大图')
+          }
+          let data = {
+            itemId: this.productForm.itemId,
+            itemName: this.productForm.itemName,
+            bigImage: this.productForm.bigImage,
+            bannerImage: this.productForm.bannerImage,
+            detail: this.productForm.detail,
+            parentCategoryId: this.productForm.parentCategoryId,
+            categoryId: this.productForm.categoryId,
+            stock: this.productForm.stock,
+            carriageExpense: this.productForm.carriageExpense,
+            homeShow: this.productForm.homeShow,
+            homeDesc: this.productForm.homeDesc,
+            priceArray: this.priceArray,
+          };
+          this.$axios.saveItem(data).then(res => {
+            this.dialogFormVisible = false
+            this.$message.success('操作成功！')
+            this.getItemList(1);
+          });
+        } else {
+          return false;
+        }
       });
     },
     // 商品大图

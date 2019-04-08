@@ -34,7 +34,7 @@
         <el-table-column prop="operDesc" label="说明"> </el-table-column>
         <el-table-column prop="resourceType" label="来源">
           <template slot-scope="scope">
-            {{ scope.row.resourceType == 1 ? "下级购买商品返佣" : "推荐用户" }}
+            {{ scope.row.resourceType == 1 ? "下级购买商品返佣" : scope.row.resourceType == 0 ? "推荐用户" : "/" }}
           </template>
         </el-table-column>
       </el-table>

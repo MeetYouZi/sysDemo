@@ -54,13 +54,13 @@
             autocomplete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item label="套餐权益描述" :label-width="formLabelWidth">
+        <!--<el-form-item label="套餐权益描述" :label-width="formLabelWidth">
           <el-input
             placeholder="请输入套餐权益描述"
             v-model="packForm.interestDesc"
             autocomplete="off"
           ></el-input>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item label="套餐描述" :label-width="formLabelWidth">
           <el-input
             placeholder="请输入套餐描述"
@@ -102,6 +102,11 @@
         <div>
           <el-form-item label="权益" :label-width="formLabelWidth">
             <el-button type="primary" @click="addGift" plain>添加权益</el-button>
+          </el-form-item>
+        </div>
+        <div>
+          <el-form-item label="套餐权益描述" :label-width="formLabelWidth">
+            {{packForm.interestDesc}}
           </el-form-item>
         </div>
         <div

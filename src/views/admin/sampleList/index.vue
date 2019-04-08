@@ -61,7 +61,7 @@
                 @click="handleEdit(scope.row)"
                 >上传报告</el-button
               >
-              <el-button type="info" size="small">详情</el-button>
+              <el-button type="info" size="small" @click="handleDetail(scope.row)">详情</el-button>
             </el-button-group>
           </template>
         </el-table-column>
@@ -83,6 +83,47 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="saveSample">确 定</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="详情" :visible.sync="dialogDetailVisible" >
+      <el-row :gutter="20">
+        <el-col :span="4"><div class="grid-content bg-purple text-right">样品编号</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.sampleNo}}</div></el-col>
+        <el-col :span="4"><div class="grid-content bg-purple text-right">姓名</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.name}}</div></el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="4"><div class="grid-content bg-purple text-right">用户昵称</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.userInfo.nickName}}</div></el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="4"><div class="grid-content bg-purple text-right">性别</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.sex == '0' ? '女':'男'}}</div></el-col>
+        <el-col :span="4"><div class="grid-content bg-purple text-right">报告状态</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.sampleState == '0' ? '等待结果':'已出结果'}}</div></el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="4"><div class="grid-content bg-purple text-right">出生日期</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.birthday}}</div></el-col>
+        <el-col :span="4"><div class="grid-content bg-purple text-right">联系电话</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.phone}}</div></el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="4"><div class="grid-content bg-purple text-right">联系地址</div></el-col>
+        <el-col :span="18"><div class="grid-content bg-purple text-left">{{detail.address}}</div></el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="4"><div class="grid-content bg-purple text-right">快递信息</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.expressNo}}</div></el-col>
+        <el-col :span="4"><div class="grid-content bg-purple text-right">备注</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.remark}}</div></el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="4"><div class="grid-content bg-purple text-right">报告链接</div></el-col>
+        <el-col :span="18"><div class="grid-content bg-purple text-left">{{detail.resultUrl}}</div></el-col>
+      </el-row>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogDetailVisible = false">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -127,7 +168,11 @@ export default {
       totalNum: 0,
       orderForm: {},
       formLabelWidth: "120px",
-      dialogFormVisible: false
+      dialogFormVisible: false,
+      dialogDetailVisible: false,
+      detail: {
+        userInfo: {}
+      }
     };
   },
   methods: {
@@ -135,6 +180,11 @@ export default {
     handleCurrentChange(val) {
       this.pageNum = val;
       this.getsampleInfoList(val);
+    },
+    //
+    handleDetail(row){
+      this.detail = row
+      this.dialogDetailVisible = true
     },
     handleEdit(row) {
       this.dialogFormVisible = true
