@@ -80,17 +80,16 @@
           <el-input v-model="packForm.price" autocomplete="off"></el-input>
         </el-form-item>
         <div>
-          <el-form-item
-            label="首页图片"
-            :label-width="formLabelWidth"
-          >
+          <el-form-item label="首页图片" :label-width="formLabelWidth">
             <!--<el-input v-model="packForm.img" autocomplete="off"></el-input>-->
             <vue-upload-img
               @uploadSuccess="uploadBannerSuccess"
               :limitNum="1"
               :file-list="bannerImg"
             ></vue-upload-img>
-            <div v-if="bannerImg.length == 0" class="el-form-item__error">请上传首页图片</div>
+            <div v-if="bannerImg.length == 0" class="el-form-item__error">
+              请上传首页图片
+            </div>
           </el-form-item>
         </div>
         <div>
@@ -101,7 +100,9 @@
               :limitNum="1"
               :file-list="detailImg"
             ></vue-upload-img>
-            <div v-if="detailImg.length == 0" class="el-form-item__error">请上传详情页面图片</div>
+            <div v-if="detailImg.length == 0" class="el-form-item__error">
+              请上传详情页面图片
+            </div>
           </el-form-item>
         </div>
         <div>
@@ -240,10 +241,8 @@ export default {
         teamPerson: [
           { required: true, message: "请选择是否为正式会员", trigger: "blur" }
         ],
-        img:[
-          { required: true, message: "首页图片不能为空", trigger: "blur" }
-        ],
-        detailImg:[
+        img: [{ required: true, message: "首页图片不能为空", trigger: "blur" }],
+        detailImg: [
           { required: true, message: "详情页面图片不能为空", trigger: "blur" }
         ]
       }
@@ -275,11 +274,11 @@ export default {
     delGifts(index) {
       this.giftList1.giftList.splice(index, 1);
     },
-    handleClose(){
-      this.resetForm()
-      this.bannerImg = []
-      this.detailImg = []
-      this.dialogFormVisible = false
+    handleClose() {
+      this.bannerImg = [];
+      this.detailImg = [];
+      this.resetForm();
+      this.dialogFormVisible = false;
     },
     hangdleEdit(row) {
       this.packForm = JSON.parse(JSON.stringify(row));
@@ -304,14 +303,14 @@ export default {
       this.dialogTitle = "新增";
       this.isShowDesc = false;
       this.packForm = {};
-      this.bannerImg= [],
-      this.detailImg= [],
-      this.giftList1.giftList = []
+      this.bannerImg = [];
+      this.detailImg = [];
+      this.giftList1.giftList = [];
       this.dialogFormVisible = true;
     },
     resetForm() {
-      this.$refs['packForm'].resetFields();
-      this.$refs['giftList1'].resetFields();
+      this.$refs["packForm"].resetFields();
+      this.$refs["giftList1"].resetFields();
     },
     // 提交
     handleSubmin(formName, giftList) {
@@ -332,11 +331,11 @@ export default {
         }
       });
       if (formNameValidate && giftListValidate) {
-        if(this.bannerImg.length == 0){
-          return false
+        if (this.bannerImg.length == 0) {
+          return false;
         }
-        if(this.detailImg.length == 0){
-          return false
+        if (this.detailImg.length == 0) {
+          return false;
         }
         let data = {
           id: this.packForm.id,
@@ -352,9 +351,9 @@ export default {
         };
         this.$axios.savePackageInfo(data).then(() => {
           this.dialogFormVisible = false;
-          this.bannerImg = []
-          this.detailImg = []
-          this.resetForm()
+          this.bannerImg = [];
+          this.detailImg = [];
+          this.resetForm();
           this.$message.success("操作成功");
           this.getPackageList(1);
         });
