@@ -121,13 +121,13 @@
         <el-col :span="4"><div class="grid-content bg-purple text-right">用户昵称</div></el-col>
         <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.userNickName}}</div></el-col>
       </el-row>
-      <el-row :gutter="20">
+      <el-row :gutter="20" v-if="detail.userCoupon">
         <el-col :span="4"><div class="grid-content bg-purple text-right">优惠券名称</div></el-col>
         <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.userCoupon.couponName}}</div></el-col>
         <el-col :span="4"><div class="grid-content bg-purple text-right">优惠金额</div></el-col>
         <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.userCoupon.amount}}</div></el-col>
       </el-row>
-      <el-row :gutter="20">
+      <el-row :gutter="20" v-if="detail.userCoupon">
         <el-col :span="4"><div class="grid-content bg-purple text-right">优惠券类型</div></el-col>
         <el-col :span="8"><div class="grid-content bg-purple text-left">
           <span v-if="detail.userCoupon.type == 1"> 满减</span>
