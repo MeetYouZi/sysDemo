@@ -137,6 +137,7 @@ export default {
     // 新增
     getBannerAdd() {
       this.bannerForm = {};
+      this.url = [];
       this.dialogTitle = "新增banner";
       this.dialogFormVisible = true;
     },
