@@ -28,10 +28,14 @@
         <el-table-column prop="user" label="使用用户信息">
           <template slot-scope="scope">
             <span v-if="scope.row.useState == 1">{{scope.row.user.nickName}}</span>
-            <span v-if="scope.row.useState == 0">暂无</span>
+            <span v-if="scope.row.useState == 0">/</span>
           </template>
         </el-table-column>
         <el-table-column prop="useTime" label="使用时间" width="180">
+          <template slot-scope="scope">
+            <span v-if="scope.row.useTime != null && scope.row.useTime  ">{{scope.row.useTime}}</span>
+            <span v-if="scope.row.useTime == null">/</span>
+          </template>
         </el-table-column>
       </el-table>
       <page-pagination

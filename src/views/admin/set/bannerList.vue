@@ -9,6 +9,9 @@
     <div class="container">
       <el-table :data="bannerList" stripe style="width: 100%">
         <el-table-column prop="url" label="图片链接">
+          <template slot-scope="scope">
+            <img width="90" height="90" :src="scope.row.url" @click="handleImg(scope.row.url)"/>
+          </template>
         </el-table-column>
         <el-table-column prop="isShow" label="是否显示">
           <template slot-scope="scope">
@@ -44,6 +47,9 @@
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="saveBanner">确 定</el-button>
       </div>
+    </el-dialog>
+    <el-dialog :visible.sync="dialogVisible">
+      <img width="100%" :src="dialogImageUrl" alt="">
     </el-dialog>
   </div>
 </template>
@@ -83,7 +89,9 @@ export default {
       dialogFormVisible: false,
       bannerList: [],
       bannerForm: {},
-      url: []
+      url: [],
+      dialogVisible: false,
+      dialogImageUrl: ''
     };
   },
   methods: {
@@ -91,6 +99,10 @@ export default {
     handleCurrentChange(val) {
       this.pageNum = val;
       this.getHomeBannerList(val);
+    },
+    handleImg(url){
+      this.dialogImageUrl = url
+      this.dialogVisible = true
     },
     handleEdit(row) {
       this.bannerForm = JSON.parse(JSON.stringify(row));

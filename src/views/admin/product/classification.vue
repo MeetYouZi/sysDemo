@@ -56,13 +56,13 @@
       ></page-pagination>
     </div>
     <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible">
-      <el-form :model="productForm">
-        <el-form-item label="是否为一级分类" :label-width="formLabelWidth">
+      <el-form :model="productForm" :rules="rules" ref="productCategoryForm">
+        <el-form-item label="是否为一级分类" :label-width="formLabelWidth" prop="isParent">
           <!--<el-input v-model="productForm.isParent" autocomplete="off"></el-input>-->
           <el-radio :disabled="!isShow" v-model="productForm.isParent" label="1">是</el-radio>
           <el-radio :disabled="!isShow" v-model="productForm.isParent" label="0">否</el-radio>
         </el-form-item>
-        <el-form-item label="选择子分类" :label-width="formLabelWidth" v-if="isEdit2">
+        <el-form-item label="选择子分类" :label-width="formLabelWidth" v-if="isEdit2" >
           <el-select v-model="productForm.categoryIndex" @change="selectParentCategory" placeholder="请选择需要修改的子分类">
             <el-option
                     v-for="(item,index) in productForm.chilItemCategory"
@@ -72,7 +72,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="分类名称" :label-width="formLabelWidth">
+        <el-form-item label="分类名称" :label-width="formLabelWidth" prop="categoryName">
           <el-input v-model="productForm.categoryName" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="选择分类" :label-width="formLabelWidth" v-if="productForm.isParent == 0">
@@ -92,7 +92,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="saveSubmit"
+        <el-button type="primary" @click="saveSubmit('productCategoryForm')"
           >确 定</el-button
         >
       </div>
@@ -124,7 +124,15 @@ export default {
       allItemCategoryList: [],
       dialogTitle: '编辑',
       isShow: true,
-      isEdit2: false
+      isEdit2: false,
+      rules:{
+        categoryName: [
+          { required: true, message: '请输入商品分类名称', trigger: 'blur' }
+        ],
+        isParent: [
+          { required: true, message: '请选择是否为一级分类', trigger: 'change' }
+        ]
+      }
     };
   },
   methods: {
@@ -188,18 +196,25 @@ export default {
         this.productForm.image = fileList[0].url
       }
     },
-    saveSubmit(){
-      let data = {
-        categoryId: this.productForm.categoryId,
-        categoryName: this.productForm.categoryName,
-        isParent: this.productForm.isParent,
-        parentId: this.productForm.parentId,
-        image: this.productForm.image,
-      }
-      this.$axios.saveItemCategory(data).then(res => {
-        this.dialogFormVisible = false
-        this.getItemCategoryList(1)
-      })
+    saveSubmit(formName){
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          let data = {
+            categoryId: this.productForm.categoryId,
+            categoryName: this.productForm.categoryName,
+            isParent: this.productForm.isParent,
+            parentId: this.productForm.parentId,
+            image: this.productForm.image,
+          }
+          this.$axios.saveItemCategory(data).then(res => {
+            this.dialogFormVisible = false
+            this.getItemCategoryList(1)
+          })
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
     },
     // 获取商品分类列表
     getItemCategoryList(pageNum) {

@@ -46,22 +46,28 @@
         </el-table-column>
         <el-table-column fixed="right" label="操作" width="300">
           <template slot-scope="scope">
-            <!--<el-button-group>-->
-            <el-button
-              v-if="scope.row.userState == 1"
-              type="primary"
-              size="small"
-              @click="hangdleBanLogin(scope.row)"
-              >允许登陆</el-button
-            >
-            <el-button
-              v-if="scope.row.userState == 0"
-              type="danger"
-              size="small"
-              @click="hangdleBanLogin(scope.row)"
-              >禁止登陆</el-button
-            >
-            <!--</el-button-group>-->
+            <el-button-group>
+              <el-button
+                v-if="scope.row.userState == 1"
+                type="primary"
+                size="small"
+                @click="hangdleBanLogin(scope.row)"
+                >允许登陆</el-button
+              >
+              <el-button
+                v-if="scope.row.userState == 0"
+                type="danger"
+                size="small"
+                @click="hangdleBanLogin(scope.row)"
+                >禁止登陆</el-button
+              >
+              <el-button
+                type="primary"
+                size="small"
+                @click="hangdleDetail(scope.row)"
+                >详情</el-button
+              >
+            </el-button-group>
           </template>
         </el-table-column>
       </el-table>
@@ -72,6 +78,117 @@
         @handleCurrentChange="handleCurrentChange"
       ></page-pagination>
     </div>
+    <el-dialog title="详情" :visible.sync="dialogDetailVisible">
+      <el-row :gutter="20">
+        <el-col :span="4"
+          ><div class="grid-content bg-purple text-right">头像</div></el-col
+        >
+        <el-col :span="8"
+          ><div class="grid-content bg-purple text-left">
+          <img width="90px" height="90px" :src="detail.pic"/>
+          </div></el-col
+        >
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="4"
+          ><div class="grid-content bg-purple text-right">用户状态</div></el-col
+        >
+        <el-col :span="8"
+          ><div class="grid-content bg-purple text-left">
+          {{detail.userState == 0 ? '正常': '禁止登陆'}}
+          </div></el-col
+        >
+        <el-col :span="4"
+          ><div class="grid-content bg-purple text-right">用户等级</div></el-col
+        >
+        <el-col :span="8"
+          ><div class="grid-content bg-purple text-left">
+            {{ detail.userLevel }}
+          </div></el-col
+        >
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="4"
+          ><div class="grid-content bg-purple text-right">用户昵称</div></el-col
+        >
+        <el-col :span="8"
+          ><div class="grid-content bg-purple text-left">
+            {{ detail.nickName }}
+          </div></el-col
+        >
+        <el-col :span="4"
+          ><div class="grid-content bg-purple text-right">手机号</div></el-col
+        >
+        <el-col :span="8"
+          ><div class="grid-content bg-purple text-left">
+            {{ detail.phone }}
+          </div></el-col
+        >
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="4"
+          ><div class="grid-content bg-purple text-right">姓名</div></el-col
+        >
+        <el-col :span="8"
+          ><div class="grid-content bg-purple text-left">
+            {{ detail.realName ? detail.realName : '暂无'}}
+          </div></el-col
+        >
+        <el-col :span="4"
+          ><div class="grid-content bg-purple text-right">
+          性别
+          </div></el-col
+        >
+        <el-col :span="8"
+          ><div class="grid-content bg-purple text-left">
+            {{ detail.sex == "0" ? "女" : "男" }}
+          </div></el-col
+        >
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="4"
+          ><div class="grid-content bg-purple text-right">身份证号</div></el-col
+        >
+        <el-col :span="8"
+          ><div class="grid-content bg-purple text-left">
+            {{ detail.identityNumber ? detail.identityNumber : '暂无'}}
+          </div></el-col
+        >
+        <el-col :span="4"
+          ><div class="grid-content bg-purple text-right">注册时间</div></el-col
+        >
+        <el-col :span="8"
+          ><div class="grid-content bg-purple text-left">
+            {{ detail.createTime }}
+          </div></el-col
+        >
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="4"
+          ><div class="grid-content bg-purple text-right">账户积分</div></el-col
+        >
+        <el-col :span="18"
+          ><div class="grid-content bg-purple text-left">
+            {{ detail.integral }}
+          </div></el-col
+        >
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="4"
+          ><div class="grid-content bg-purple text-right">账户余额</div></el-col
+        >
+        <el-col :span="8"
+          ><div class="grid-content bg-purple text-left">
+            {{ detail.balance }}
+          </div></el-col
+        >
+      </el-row>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogDetailVisible = false"
+          >确 定</el-button
+        >
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -91,47 +208,54 @@ export default {
       phone: "",
       levelId: "",
       levelList: [],
-      userList: []
+      userList: [],
+      dialogDetailVisible: false,
+      detail: {}
     };
   },
   methods: {
     // 翻页
-    handleCurrentChange(val){
-      this.pageNum = val
-      this.getUserList(val)
+    handleCurrentChange(val) {
+      this.pageNum = val;
+      this.getUserList(val);
+    },
+    // 详情
+    hangdleDetail(row) {
+      console.log(row);
+      this.detail = row
+      this.dialogDetailVisible = true
     },
     // 允许禁用
-    hangdleBanLogin(row){
+    hangdleBanLogin(row) {
       let data = {
         userId: row.id
-      }
-      let msgText = ''
+      };
+      let msgText = "";
       if (row.userState == 0) {
-        msgText='是否禁用该用户登陆'
+        msgText = "是否禁用该用户登陆";
       } else {
-        msgText='是否允许该用户登陆'
+        msgText = "是否允许该用户登陆";
       }
-      this.$confirm(msgText, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$axios.banLogin(data).then( () =>{
-          row.userState =  row.userState == 1 ? '0' : '1'
-          this.$message({
-            type: 'success',
-            message: '操作成功!'
+      this.$confirm(msgText, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$axios.banLogin(data).then(() => {
+            row.userState = row.userState == 1 ? "0" : "1";
+            this.$message({
+              type: "success",
+              message: "操作成功!"
+            });
           });
         })
-      }).catch(() => {
-
-      });
-
+        .catch(() => {});
     },
     // 获取用户列表
     getUserList(pageNum) {
-      let currentPage = pageNum ? pageNum : 1
-      this.pageNum = currentPage
+      let currentPage = pageNum ? pageNum : 1;
+      this.pageNum = currentPage;
       let data = {
         nickName: this.nickName,
         phone: this.phone,

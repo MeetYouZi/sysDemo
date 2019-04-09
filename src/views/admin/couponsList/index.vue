@@ -78,14 +78,14 @@
       ></page-pagination>
     </div>
     <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible">
-      <el-form :model="couponForm">
-        <el-form-item label="优惠券名称" :label-width="formLabelWidth">
+      <el-form :model="couponForm" :rules="rules" ref="couponForm">
+        <el-form-item label="优惠券名称" :label-width="formLabelWidth" prop="couponName">
           <el-input
             v-model="couponForm.couponName"
             autocomplete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item label="优惠券类型" :label-width="formLabelWidth">
+        <el-form-item label="优惠券类型" :label-width="formLabelWidth" prop="type">
           <el-select v-model="couponForm.type" placeholder="请选择" clearable>
             <el-option
               v-for="item in typeList"
@@ -96,7 +96,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="有效期" :label-width="formLabelWidth">
+        <el-form-item label="有效期" :label-width="formLabelWidth" >
           <el-date-picker
             v-model="couponForm.expires"
             type="daterange"
@@ -107,7 +107,7 @@
           >
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="是否启用" :label-width="formLabelWidth">
+        <el-form-item label="是否启用" :label-width="formLabelWidth" prop="type">
           <el-radio v-model="couponForm.isEnable" label="1">是</el-radio>
           <el-radio v-model="couponForm.isEnable" label="0">否</el-radio>
         </el-form-item>
@@ -135,7 +135,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="saveCoupon">确 定</el-button>
+        <el-button type="primary" @click="saveCoupon('couponForm')">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -167,8 +167,20 @@ export default {
         {
           id: "3",
           name: "商品抵扣券"
-        }
+        },
       ],
+      rules: {
+        couponName: [
+          { required: true, message: '请输入优惠券名称', trigger: 'blur' }
+        ],
+        type: [
+          { required: true, message: '请选择优惠券类型', trigger: 'blur' }
+        ],
+        isEnable: [
+          { required: true, message: '请选择是否启用', trigger: 'blur' }
+        ],
+
+      },
       dialogTitle: "编辑优惠券",
       formLabelWidth: "120px",
       dialogFormVisible: false,
@@ -185,8 +197,7 @@ export default {
     hangdleEdit(row) {
       this.dialogTitle = "编辑优惠券";
       this.couponForm = JSON.parse(JSON.stringify(row));
-      this.couponForm.expires = [this.couponForm.startTime,this.couponForm.endTime]
-      console.log(this.couponForm.expires,'this.couponForm.expires ')
+      this.couponForm.expires = [this.couponForm.startTime.slice(0,10),this.couponForm.endTime.slice(0,10)]
       this.dialogFormVisible = true;
     },
     // 新增
@@ -196,23 +207,31 @@ export default {
       this.dialogFormVisible = true;
     },
     // 保存
-    saveCoupon() {
-      let data = {
-        id: this.couponForm.id,
-        couponName: this.couponForm.couponName,
-        type: this.couponForm.type,
-        startTime: this.couponForm.expires[0],
-        endTime: this.couponForm.expires[1],
-        isEnable: this.couponForm.isEnable,
-        amount: this.couponForm.amount ? this.couponForm.amount : '',
-        fullReductionAmount: this.couponForm.fullReductionAmount ? this.couponForm.fullReductionAmount : '',
-        itemId: this.couponForm.itemId ? this.couponForm.itemId : ''
-      };
-      this.$axios.saveCoupon(data).then(res => {
-        this.$message.success("操作成功");
-        this.dialogFormVisible = false;
-        this.getCouponList(1);
+    saveCoupon(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          let data = {
+            id: this.couponForm.id,
+            couponName: this.couponForm.couponName,
+            type: this.couponForm.type,
+            startTime: this.couponForm.expires[0],
+            endTime: this.couponForm.expires[1],
+            isEnable: this.couponForm.isEnable,
+            amount: this.couponForm.amount ? this.couponForm.amount : '',
+            fullReductionAmount: this.couponForm.fullReductionAmount ? this.couponForm.fullReductionAmount : '',
+            itemId: this.couponForm.itemId ? this.couponForm.itemId : ''
+          };
+          this.$axios.saveCoupon(data).then(res => {
+            this.$message.success("操作成功");
+            this.dialogFormVisible = false;
+            this.getCouponList(1);
+          });
+        } else {
+          return false;
+        }
       });
+
+
     },
     // 获取用户列表
     getCouponList(pageNum) {

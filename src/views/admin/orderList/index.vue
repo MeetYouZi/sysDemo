@@ -51,7 +51,7 @@
                 @click="handleelivery(scope.row)"
                 >发货</el-button
               >
-              <el-button type="warning" size="small" @click="handleEdit(scope.row)">修改</el-button>
+              <el-button :disabled="scope.row.orderState >= 2 " type="warning" size="small" @click="handleEdit(scope.row)">修改</el-button>
               <el-button type="info" size="small" @click="handleDetail(scope.row)">详情</el-button>
             </el-button-group>
           </template>
@@ -104,6 +104,14 @@
         <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.contactPhone}}</div></el-col>
       </el-row>
       <el-row :gutter="20">
+        <el-col :span="4"><div class="grid-content bg-purple text-right">订单状态</div></el-col>
+        <el-col :span="18"><div class="grid-content bg-purple text-left" v-if="detail.orderState == 0">待支付</div></el-col>
+        <el-col :span="18"><div class="grid-content bg-purple text-left" v-if="detail.orderState == 1">待发货</div></el-col>
+        <el-col :span="18"><div class="grid-content bg-purple text-left" v-if="detail.orderState == 2">待收货</div></el-col>
+        <el-col :span="18"><div class="grid-content bg-purple text-left" v-if="detail.orderState == 3">已完成</div></el-col>
+        <el-col :span="18"><div class="grid-content bg-purple text-left" v-if="detail.orderState == 4">取消订单</div></el-col>
+      </el-row>
+      <el-row :gutter="20">
         <el-col :span="4"><div class="grid-content bg-purple text-right">收货地址</div></el-col>
         <el-col :span="18"><div class="grid-content bg-purple text-left">{{detail.shippingAddress}}</div></el-col>
       </el-row>
@@ -113,19 +121,21 @@
         <el-col :span="4"><div class="grid-content bg-purple text-right">用户昵称</div></el-col>
         <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.userNickName}}</div></el-col>
       </el-row>
-      <!--<el-row :gutter="20">-->
-        <!--<el-col :span="4"><div class="grid-content bg-purple text-right">优惠券名称</div></el-col>-->
-        <!--<el-col :span="4"><div class="grid-content bg-purple text-left">{{detail.userCoupon.couponName}}</div></el-col>-->
-        <!--<el-col :span="4"><div class="grid-content bg-purple text-right">优惠金额</div></el-col>-->
-        <!--<el-col :span="4"><div class="grid-content bg-purple text-left">{{detail.userCoupon.amount}}</div></el-col>-->
-        <!--<el-col :span="4"><div class="grid-content bg-purple text-right">优惠券类型</div></el-col>-->
-        <!--<el-col :span="4"><div class="grid-content bg-purple text-left">-->
-          <!--<span v-if="detail.userCoupon.type == 1"> 满减</span>-->
-          <!--<span v-if="detail.userCoupon.type == 2"> 全场通用抵扣券</span>-->
-          <!--<span v-if="detail.userCoupon.type == 3"> 商品抵扣券</span>-->
-        <!--</div>-->
-        <!--</el-col>-->
-      <!--</el-row>-->
+      <el-row :gutter="20">
+        <el-col :span="4"><div class="grid-content bg-purple text-right">优惠券名称</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.userCoupon.couponName}}</div></el-col>
+        <el-col :span="4"><div class="grid-content bg-purple text-right">优惠金额</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.userCoupon.amount}}</div></el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="4"><div class="grid-content bg-purple text-right">优惠券类型</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple text-left">
+          <span v-if="detail.userCoupon.type == 1"> 满减</span>
+          <span v-if="detail.userCoupon.type == 2"> 全场通用抵扣券</span>
+          <span v-if="detail.userCoupon.type == 3"> 商品抵扣券</span>
+        </div>
+        </el-col>
+      </el-row>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogDetailVisible = false">确 定</el-button>
       </div>
@@ -174,7 +184,9 @@ export default {
       formLabelWidth: '120px',
       dialogFormVisible: false,
       dialogDetailVisible: false,
-      detail: {}
+      detail: {
+        userCoupon: {}
+      }
     };
   },
   methods: {
@@ -189,9 +201,9 @@ export default {
     },
     // 订单详情
     handleDetail(row) {
-      this.dialogDetailVisible = true
       this.detail = row
-      console.log(row,'row')
+      console.log(this.detail,'row')
+      this.dialogDetailVisible = true
     },
     //修改订单
     saveOrderInfo(){

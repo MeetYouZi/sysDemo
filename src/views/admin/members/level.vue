@@ -20,12 +20,6 @@
         <el-table-column fixed="right" label="操作" width="300">
           <template slot-scope="scope">
             <el-button
-              type="primary"
-              size="small"
-              @click="hangdleDetail(scope.row)"
-              >详情</el-button
-            >
-            <el-button
               type="warning"
               size="small"
               @click="hangdleEdit(scope.row)"
@@ -46,11 +40,12 @@
       :visible.sync="dialogLeveVisible"
       width="800px"
     >
-      <el-form :model="LeveForm" :inline="true">
+      <el-form :model="LeveForm" :rules="rules" ref="levelForm"  :inline="true">
         <el-form-item
           label="等级名称"
           :label-width="formLabelWidth"
           class="title"
+          prop="levelName"
         >
           <el-input v-model="LeveForm.levelName" autocomplete="off"></el-input>
         </el-form-item>
@@ -59,6 +54,7 @@
             label="正式会员"
             :label-width="formLabelWidth"
             class="title"
+            prop="teamPerson"
           >
             <el-radio :disabled="isEdit" v-model="LeveForm.teamPerson" label="0"
               >否</el-radio
@@ -113,7 +109,7 @@
           v-for="(item, index) in CouponIdList"
           :key="index"
         >
-          <el-form-item label="选择优惠券" :label-width="formLabelWidth">
+          <el-form-item label="选择优惠券" :label-width="formLabelWidth"  >
             <el-select
               :disabled="isEdit"
               v-model="item.couponId"
@@ -129,7 +125,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="数量" :label-width="formLabelWidth">
+          <el-form-item label="数量" :label-width="formLabelWidth"  >
             <el-input
               :disabled="isEdit"
               v-model="item.num"
@@ -170,7 +166,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="数量" :label-width="formLabelWidth">
+          <el-form-item label="数量" :label-width="formLabelWidth" prop="levelName">
             <el-input
               :disabled="isEdit"
               v-model="item.num"
@@ -186,7 +182,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogLeveVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleAddLevel">确 定</el-button>
+        <el-button type="primary" @click="handleAddLevel('levelForm')">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -201,6 +197,7 @@ export default {
   },
   data() {
     return {
+      validate:{},
       totalNum: 0,
       pageNum: 1,
       pageSize: 15,
@@ -210,12 +207,25 @@ export default {
       DialogTitle: "编辑用户等级",
       formLabelWidth: "120px",
       dialogLeveVisible: false,
+      dialogDetailVisible: false,
       isEdit: false,
       LeveForm: {
         teamPerson: '1'
       },
+      rules:{
+        levelName: [
+          { required: true, message: '请输入等级名称', trigger: 'blur' }
+        ],
+        teamPerson:[
+          { required: true, message: '请输入等级名称', trigger: 'blur' }
+        ],
+        coupon0:[
+          { required: true, message: '请输入等级名称', trigger: 'change' }
+        ]
+      },
       RewardList: [],
-      CouponIdList: []
+      CouponIdList: [],
+      detail: {}
     };
   },
   methods: {
@@ -228,10 +238,12 @@ export default {
     },
     // 添加优惠券
     addCoupons() {
+
       this.CouponIdList.push({
         couponId: "",
         num: ""
       });
+      console.log(this.CouponIdList)
     },
     // 删除优惠券列表
     delCoupons(index) {
@@ -273,24 +285,31 @@ export default {
       this.isEdit = false;
     },
     // 新增
-    handleAddLevel() {
-      let manageReward = {
-        num: this.LeveForm.manageRewardNum,
-        couponId: "0"
-      };
-      this.CouponIdList.push(manageReward);
-      let data = {
-        levelId: this.LeveForm.levelId,
-        teamPerson: this.LeveForm.teamPerson,
-        levelName: this.LeveForm.levelName,
-        accomplishMinVal: this.LeveForm.accomplishMinVal,
-        accomplishMaxVal: this.LeveForm.accomplishMaxVal,
-        directlyReward: this.LeveForm.directlyReward,
-        indirectReward: this.LeveForm.indirectReward,
-        manageReward: this.CouponIdList,
-        additionalConditions: this.RewardList
-      };
-      this.submit(data);
+    handleAddLevel(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          let manageReward = {
+            num: this.LeveForm.manageRewardNum ? this.LeveForm.manageRewardNum : '',
+            couponId: "0"
+          };
+          this.CouponIdList.push(manageReward);
+          let data = {
+            levelId: this.LeveForm.levelId,
+            teamPerson: this.LeveForm.teamPerson,
+            levelName: this.LeveForm.levelName,
+            accomplishMinVal: this.LeveForm.accomplishMinVal,
+            accomplishMaxVal: this.LeveForm.accomplishMaxVal,
+            directlyReward: this.LeveForm.directlyReward,
+            indirectReward: this.LeveForm.indirectReward,
+            manageReward: this.CouponIdList,
+            additionalConditions: this.RewardList
+          };
+          this.submit(data);
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
     },
     submit(data) {
       this.$axios.saveLevel(data).then(() => {
@@ -302,6 +321,8 @@ export default {
     // 详情
     hangdleDetail(row) {
       console.log(row);
+      this.detail = row
+      this.dialogDetailVisible = true
     },
     // 翻页
     handleCurrentChange(val) {

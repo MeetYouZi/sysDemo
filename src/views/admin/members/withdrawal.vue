@@ -31,13 +31,13 @@
         </el-table-column>
         <el-table-column prop="amount" label="金额" width="180">
         </el-table-column>
-        <el-table-column prop="withdrawState" label="审核状态">
+        <!--<el-table-column prop="withdrawState" label="审核状态">
           <template slot-scope="scope">
             <span v-if="scope.row.withdrawState == 0">待审核</span>
             <span v-if="scope.row.withdrawState == 1">审核通过</span>
             <span v-if="scope.row.withdrawState == 2">审核不通过</span>
           </template>
-        </el-table-column>
+        </el-table-column>-->
         <el-table-column prop="handleState" label="处理状态">
           <template slot-scope="scope">
             <span v-if="scope.row.handleState == 0">未处理</span>

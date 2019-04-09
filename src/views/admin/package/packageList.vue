@@ -16,7 +16,7 @@
             {{ scope.row.needCode == 1 ? "是" : "否" }}
           </template>
         </el-table-column>
-        <el-table-column prop="teamPerson" label="计算团队成员">
+        <el-table-column prop="teamPerson" label="是否为正式会员">
           <template slot-scope="scope">
             {{ scope.row.teamPerson == 1 ? "是" : "否" }}
           </template>
@@ -46,45 +46,70 @@
       :visible.sync="dialogFormVisible"
       width="800px"
     >
-      <el-form :model="packForm" :inline="true">
-        <el-form-item label="套餐名称" :label-width="formLabelWidth">
+      <el-form :model="packForm" :inline="true" ref="packForm" :rules="rules">
+        <el-form-item
+          label="套餐名称"
+          :label-width="formLabelWidth"
+          prop="packageName"
+        >
           <el-input
             placeholder="请输入套餐名称"
             v-model="packForm.packageName"
             autocomplete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item label="套餐权益描述" :label-width="formLabelWidth">
+        <!--<el-form-item label="套餐权益描述" :label-width="formLabelWidth">
           <el-input
             placeholder="请输入套餐权益描述"
             v-model="packForm.interestDesc"
             autocomplete="off"
           ></el-input>
-        </el-form-item>
-        <el-form-item label="套餐描述" :label-width="formLabelWidth">
+        </el-form-item>-->
+        <el-form-item
+          label="套餐描述"
+          :label-width="formLabelWidth"
+          prop="packageDesc"
+        >
           <el-input
             placeholder="请输入套餐描述"
             v-model="packForm.packageDesc"
             autocomplete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item label="价格" :label-width="formLabelWidth">
+        <el-form-item label="价格" :label-width="formLabelWidth" prop="price">
           <el-input v-model="packForm.price" autocomplete="off"></el-input>
         </el-form-item>
         <div>
-          <el-form-item label="首页图片" :label-width="formLabelWidth">
+          <el-form-item
+            label="首页图片"
+            :label-width="formLabelWidth"
+          >
             <!--<el-input v-model="packForm.img" autocomplete="off"></el-input>-->
-            <vue-upload-img @uploadSuccess="uploadBannerSuccess" :limitNum="1" :file-list="bannerImg"></vue-upload-img>
+            <vue-upload-img
+              @uploadSuccess="uploadBannerSuccess"
+              :limitNum="1"
+              :file-list="bannerImg"
+            ></vue-upload-img>
+            <div v-if="bannerImg.length == 0" class="el-form-item__error">请上传首页图片</div>
           </el-form-item>
         </div>
         <div>
           <el-form-item label="详情页面图片" :label-width="formLabelWidth">
-            <!--<el-input v-model="packForm.detailImg" autocomplete="off"></el-input>-->
-            <vue-upload-img @uploadSuccess="uploadDetailSuccess" :limitNum="1" :file-list="detailImg"></vue-upload-img>
+            <!--<el-input v-show="false" v-model="packForm.detailImg" autocomplete="off"></el-input>-->
+            <vue-upload-img
+              @uploadSuccess="uploadDetailSuccess"
+              :limitNum="1"
+              :file-list="detailImg"
+            ></vue-upload-img>
+            <div v-if="detailImg.length == 0" class="el-form-item__error">请上传详情页面图片</div>
           </el-form-item>
         </div>
         <div>
-          <el-form-item label="需要资格码" :label-width="formLabelWidth">
+          <el-form-item
+            label="需要资格码"
+            :label-width="formLabelWidth"
+            prop="needCode"
+          >
             <!--单选-->
             <!--<el-input v-model="packForm.needCode" autocomplete="off"></el-input>-->
             <el-radio v-model="packForm.needCode" label="1">是</el-radio>
@@ -92,24 +117,46 @@
           </el-form-item>
         </div>
         <div>
-          <el-form-item label="计算团队成员" :label-width="formLabelWidth">
+          <el-form-item
+            label="是否为正式会员"
+            :label-width="formLabelWidth"
+            prop="teamPerson"
+          >
             <!--单选-->
             <!--<el-input v-model="packForm.teamPerson" autocomplete="off"></el-input>-->
             <el-radio v-model="packForm.teamPerson" label="1">是</el-radio>
             <el-radio v-model="packForm.teamPerson" label="0">否</el-radio>
           </el-form-item>
         </div>
+      </el-form>
+      <el-form :model="giftList1" :inline="true" ref="giftList1">
         <div>
           <el-form-item label="权益" :label-width="formLabelWidth">
-            <el-button type="primary" @click="addGift" plain>添加权益</el-button>
+            <el-button type="primary" @click="addGift" plain
+              >添加权益</el-button
+            >
+          </el-form-item>
+        </div>
+        <div v-if="isShowDesc">
+          <el-form-item label="套餐权益描述" :label-width="formLabelWidth">
+            {{ packForm.interestDesc }}
           </el-form-item>
         </div>
         <div
           class="addReward"
-          v-for="(item, index) in giftList"
+          v-for="(item, index) in giftList1.giftList"
           :key="index"
         >
-          <el-form-item label="选择优惠券" :label-width="formLabelWidth">
+          <el-form-item
+            label="选择优惠券"
+            :label-width="formLabelWidth"
+            :prop="'giftList.' + index + '.couponId'"
+            :rules="{
+              required: true,
+              message: '优惠券id不能为空',
+              trigger: 'blur'
+            }"
+          >
             <el-select
               v-model="item.couponId"
               placeholder="选择优惠券"
@@ -124,18 +171,26 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="数量" :label-width="formLabelWidth">
-            <el-input
-              v-model="item.num"
-              autocomplete="off"
-            ></el-input>
+          <el-form-item
+            label="数量"
+            :label-width="formLabelWidth"
+            :prop="'giftList.' + index + '.num'"
+            :rules="{
+              required: true,
+              message: '数量不能为空',
+              trigger: 'blur'
+            }"
+          >
+            <el-input v-model="item.num" autocomplete="off"></el-input>
           </el-form-item>
           <i class="el-icon-error" @click="delGifts(index)"></i>
         </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleSubmin">确 定</el-button>
+        <el-button @click="handleClose">取 消</el-button>
+        <el-button type="primary" @click="handleSubmin('packForm', 'giftList1')"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
   </div>
@@ -165,9 +220,33 @@ export default {
       formLabelWidth: "120px",
       dialogFormVisible: false,
       dialogTitle: "新增",
-      giftList: [],
+      isShowDesc: false,
+      giftList1: {
+        giftList: []
+      },
       bannerImg: [],
       detailImg: [],
+      rules: {
+        packageName: [
+          { required: true, message: "请输入套餐名称", trigger: "blur" }
+        ],
+        packageDesc: [
+          { required: true, message: "请输入套餐描述", trigger: "change" }
+        ],
+        price: [{ required: true, message: "请输入价格", trigger: "change" }],
+        needCode: [
+          { required: true, message: "请选择是否需要资格吗", trigger: "blur" }
+        ],
+        teamPerson: [
+          { required: true, message: "请选择是否为正式会员", trigger: "blur" }
+        ],
+        img:[
+          { required: true, message: "首页图片不能为空", trigger: "blur" }
+        ],
+        detailImg:[
+          { required: true, message: "详情页面图片不能为空", trigger: "blur" }
+        ]
+      }
     };
   },
   methods: {
@@ -176,68 +255,110 @@ export default {
       this.pageNum = val;
       this.getPackageList(val);
     },
-    uploadBannerSuccess(fileList){
-      if(fileList.length > 0) {
-        this.packForm.img = fileList[0].url
+    uploadBannerSuccess(fileList) {
+      if (fileList.length > 0) {
+        this.packForm.img = fileList[0].url;
       }
     },
-    uploadDetailSuccess(fileList){
-      if(fileList.length > 0) {
-        this.packForm.detailImg = fileList[0].url
+    uploadDetailSuccess(fileList) {
+      if (fileList.length > 0) {
+        this.packForm.detailImg = fileList[0].url;
       }
     },
     addGift() {
-      this.giftList.push({
+      this.giftList1.giftList.push({
         couponId: "",
         num: ""
       });
     },
     // 删除优惠券列表
     delGifts(index) {
-      this.giftList.splice(index, 1);
+      this.giftList1.giftList.splice(index, 1);
+    },
+    handleClose(){
+      this.resetForm()
+      this.bannerImg = []
+      this.detailImg = []
+      this.dialogFormVisible = false
     },
     hangdleEdit(row) {
       this.packForm = JSON.parse(JSON.stringify(row));
+      this.isShowDesc = true;
       this.bannerImg = [
         {
-          name: 'bannerImg',
+          name: "bannerImg",
           url: this.packForm.img
         }
-      ]
+      ];
       this.detailImg = [
         {
-          name: 'detailImg',
+          name: "detailImg",
           url: this.packForm.detailImg
         }
-      ]
-      this.giftList = JSON.parse(this.packForm.gift)
+      ];
+      this.giftList1.giftList = JSON.parse(this.packForm.gift);
       this.dialogFormVisible = true;
     },
     //addPackItem
     addPackItem() {
       this.dialogTitle = "新增";
-      this.dialogFormVisible = true;
+      this.isShowDesc = false;
       this.packForm = {};
+      this.bannerImg= [],
+      this.detailImg= [],
+      this.giftList1.giftList = []
+      this.dialogFormVisible = true;
+    },
+    resetForm() {
+      this.$refs['packForm'].resetFields();
+      this.$refs['giftList1'].resetFields();
     },
     // 提交
-    handleSubmin() {
-      let data = {
-        id: this.packForm.id,
-        packageName: this.packForm.packageName,
-        interestDesc: this.packForm.interestDesc,
-        packageDesc: this.packForm.packageDesc,
-        price: this.packForm.price,
-        img: this.packForm.img,
-        detailImg: this.packForm.detailImg,
-        needCode: this.packForm.needCode,
-        teamPerson: this.packForm.teamPerson,
-        gift: this.giftList
-      };
-      this.$axios.savePackageInfo(data).then(() => {
-        this.dialogFormVisible = false;
-        this.$message.success("操作成功");
-        this.getPackageList(1)
+    handleSubmin(formName, giftList) {
+      var formNameValidate = false;
+      var giftListValidate = false;
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          formNameValidate = true;
+        } else {
+          return false;
+        }
       });
+      this.$refs[giftList].validate(valid1 => {
+        if (valid1) {
+          giftListValidate = true;
+        } else {
+          return false;
+        }
+      });
+      if (formNameValidate && giftListValidate) {
+        if(this.bannerImg.length == 0){
+          return false
+        }
+        if(this.detailImg.length == 0){
+          return false
+        }
+        let data = {
+          id: this.packForm.id,
+          packageName: this.packForm.packageName,
+          interestDesc: this.packForm.interestDesc,
+          packageDesc: this.packForm.packageDesc,
+          price: this.packForm.price,
+          img: this.packForm.img,
+          detailImg: this.packForm.detailImg,
+          needCode: this.packForm.needCode,
+          teamPerson: this.packForm.teamPerson,
+          gift: this.giftList1.giftList
+        };
+        this.$axios.savePackageInfo(data).then(() => {
+          this.dialogFormVisible = false;
+          this.bannerImg = []
+          this.detailImg = []
+          this.resetForm()
+          this.$message.success("操作成功");
+          this.getPackageList(1);
+        });
+      }
     },
     // 获取列表
     getPackageList(pageNum) {
