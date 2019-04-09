@@ -116,6 +116,11 @@
           <el-radio :disabled="isEdit" v-model="productForm.homeShow" label="1">是</el-radio>
           <el-radio :disabled="isEdit" v-model="productForm.homeShow" label="0">否</el-radio>
         </el-form-item>
+        <el-form-item label="是否上架" :label-width="formLabelWidth" prop="itemState">
+          <!--<el-input v-model="productForm.homeShow" autocomplete="off"></el-input>-->
+          <el-radio :disabled="isEdit" v-model="productForm.itemState" label="1">下架</el-radio>
+          <el-radio :disabled="isEdit" v-model="productForm.itemState" label="0">上架</el-radio>
+        </el-form-item>
         <el-form-item label="商品轮播图" :label-width="formLabelWidth">
           <!--<el-input v-model="productForm.bannerImage" autocomplete="off"></el-input>-->
           <vue-upload-img @uploadSuccess="uploadBannerSuccess" :limitNum="3" :disabled="isEdit" :file-list="bannerImage"></vue-upload-img>
@@ -189,7 +194,9 @@
       </el-row>
       <el-row :gutter="20">
         <el-col :span="4"><div class="grid-content bg-purple text-right">子分类</div></el-col>
-        <el-col :span="18"><div class="grid-content bg-purple text-left">{{detail.categoryId}}</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.categoryId}}</div></el-col>
+        <el-col :span="4"><div class="grid-content bg-purple text-right">是否上架</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.homeShow == 0 ? '上架' : '下架'}}</div></el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="4"><div class="grid-content bg-purple text-right">商品状态</div></el-col>
@@ -251,7 +258,7 @@ export default {
       itemStateList: [
         {
           id:0,
-          stateName: '商家'
+          stateName: '上架'
         },{
           id:1,
           stateName: '下架'
@@ -283,6 +290,9 @@ export default {
         ],
         stock: [
           { required: true, message: '请输入库存', trigger: 'blur' }
+        ],
+        itemState: [
+          { required: true, message: '请选择商品状态', trigger: 'blur' }
         ],
         carriageExpense: [
           { required: true, message: '请输入邮费', trigger: 'blur' }
@@ -395,6 +405,7 @@ export default {
             parentCategoryId: this.productForm.parentCategoryId,
             categoryId: this.productForm.categoryId,
             stock: this.productForm.stock,
+            itemState: this.productForm.itemState,
             carriageExpense: this.productForm.carriageExpense,
             homeShow: this.productForm.homeShow,
             homeDesc: this.productForm.homeDesc,
