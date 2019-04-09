@@ -57,11 +57,11 @@ export default {
     return {
       collapse: false,
       items: [
-        {
-          icon: "el-icon-menu",
-          index: "home",
-          title: "首页"
-        },
+        // {
+        //   icon: "el-icon-menu",
+        //   index: "home",
+        //   title: "首页"
+        // },
         {
           icon: "el-icon-date",
           index: "members",

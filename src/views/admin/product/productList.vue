@@ -30,18 +30,20 @@
     </div>
     <div class="container">
       <el-table :data="itemList" stripe style="width: 100%">
-        <el-table-column prop="itemName" label="等级名称" width="180">
+        <el-table-column prop="id" label="商品id" width="180">
+        </el-table-column>
+        <el-table-column prop="itemName" label="等级名称">
         </el-table-column>
         <el-table-column prop="itemState" label="商品状态">
           <template slot-scope="scope">
             {{ scope.row.itemState == 1 ? "下架" : "上架" }}
           </template>
         </el-table-column>
-        <el-table-column prop="carriageExpense" label="运费" width="180">
+        <el-table-column prop="carriageExpense" label="运费">
         </el-table-column>
         <el-table-column prop="stock" label="库存" width="180">
         </el-table-column>
-        <el-table-column prop="saleNum" label="销量" width="180">
+        <el-table-column prop="saleNum" label="销量">
         </el-table-column>
 
         <el-table-column fixed="right" label="操作" width="300">
@@ -177,6 +179,8 @@
         </div></el-col>
         <el-col :span="4"><div class="grid-content bg-purple text-right">等级名称</div></el-col>
         <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.itemName}}</div></el-col>
+        <el-col :span="4"><div class="grid-content bg-purple text-right">商品id</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.id}}</div></el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="4"><div class="grid-content bg-purple text-right">商品轮播图</div></el-col>
@@ -195,8 +199,8 @@
       <el-row :gutter="20">
         <el-col :span="4"><div class="grid-content bg-purple text-right">子分类</div></el-col>
         <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.categoryId}}</div></el-col>
-        <el-col :span="4"><div class="grid-content bg-purple text-right">是否上架</div></el-col>
-        <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.homeShow == 0 ? '上架' : '下架'}}</div></el-col>
+        <!--<el-col :span="4"><div class="grid-content bg-purple text-right">首页显示</div></el-col>-->
+        <!--<el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.homeShow == 0 ? '否' : '是'}}</div></el-col>-->
       </el-row>
       <el-row :gutter="20">
         <el-col :span="4"><div class="grid-content bg-purple text-right">商品状态</div></el-col>

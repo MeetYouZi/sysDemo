@@ -64,7 +64,7 @@ export default {
           this.$axios.login(data).then(res => {
             localStorage.setItem("ms_username", res.data.user.userName);
             this.changeToken(res.data.token);
-            this.$router.push("/home");
+            this.$router.push("/membersList");
           });
         } else {
           console.log("error submit!!");
