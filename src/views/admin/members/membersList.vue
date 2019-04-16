@@ -27,6 +27,7 @@
         </div>
         <el-button type="primary" @click="getUserList(1)">确定</el-button>
       </div>
+      <el-button type="primary" @click="getFile">导出</el-button>
     </div>
     <div class="container">
       <el-table :data="userList" stripe style="width: 100%">
@@ -194,6 +195,7 @@
 </template>
 
 <script>
+import base from "@/api/base";
 import pagePagination from "@/components/common/pagePagination";
 export default {
   name: "membersList",
@@ -219,6 +221,15 @@ export default {
     handleCurrentChange(val) {
       this.pageNum = val;
       this.getUserList(val);
+    },
+    // 导出
+    getFile() {
+      let data = {
+        nickName: this.nickName,
+        phone: this.phone,
+        levelId: this.levelId,
+      }
+      window.open(`${base.url}/backManage/exportUser?${this.$qs.stringify(data)}`, 'self')
     },
     // 详情
     hangdleDetail(row) {
@@ -283,4 +294,8 @@ export default {
 };
 </script>
 
-<style lang="stylus" rel="stylesheet/stylus" scoped></style>
+<style lang="stylus" rel="stylesheet/stylus" scoped>
+.content-bar
+  display flex
+  justify-content space-between
+</style>

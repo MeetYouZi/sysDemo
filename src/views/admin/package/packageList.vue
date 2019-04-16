@@ -4,6 +4,7 @@
     <div class="container mgt10">
       <div class="mgb20 addBar">
         <el-button type="primary" @click="addPackItem" plain>新增</el-button>
+        <!--<el-button type="primary" @click="getFile">导出</el-button>-->
       </div>
       <el-table :data="packageInfoList" stripe style="width: 100%">
         <el-table-column prop="packageName" label="套餐名称" width="180">
@@ -198,6 +199,7 @@
 </template>
 
 <script>
+import base from "@/api/base";
 import pagePagination from "@/components/common/pagePagination";
 import vueUploadImg from "common/UploadFile";
 export default {
@@ -269,6 +271,15 @@ export default {
         couponId: "",
         num: ""
       });
+    },
+    // 导出
+    getFile() {
+      let data = {
+        nickName: this.nickName,
+        phone: this.phone,
+        levelId: this.levelId,
+      }
+      window.open(`${base.url}/backManage/exportUser?${this.$qs.stringify(data)}`, 'self')
     },
     // 删除优惠券列表
     delGifts(index) {

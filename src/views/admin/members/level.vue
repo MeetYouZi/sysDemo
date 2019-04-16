@@ -80,27 +80,24 @@
         </el-form-item>
         <el-form-item label="公益补贴" :label-width="formLabelWidth">
           <el-input
-            :disabled="isEdit"
             v-model="LeveForm.directlyReward"
             autocomplete="off"
           ></el-input>
         </el-form-item>
         <el-form-item label="推广补贴" :label-width="formLabelWidth">
           <el-input
-            :disabled="isEdit"
             v-model="LeveForm.indirectReward"
             autocomplete="off"
           ></el-input>
         </el-form-item>
         <el-form-item label="公益基金" :label-width="formLabelWidth">
           <el-input
-            :disabled="isEdit"
             v-model="LeveForm.manageRewardNum"
             autocomplete="off"
           ></el-input>
         </el-form-item>
         <el-form-item label="" :label-width="formLabelWidth">
-          <el-button :disabled="isEdit" type="primary" @click="addCoupons" plain
+          <el-button type="primary" @click="addCoupons" plain
             >添加优惠券</el-button
           >
         </el-form-item>
@@ -122,7 +119,6 @@
             }"
           >
             <el-select
-              :disabled="isEdit"
               v-model="item.couponId"
               placeholder="选择优惠券"
               clearable
@@ -147,7 +143,6 @@
             }"
           >
             <el-input
-              :disabled="isEdit"
               v-model="item.num"
               autocomplete="off"
             ></el-input>

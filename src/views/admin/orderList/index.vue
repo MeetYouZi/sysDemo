@@ -21,6 +21,7 @@
         </div>
         <el-button type="primary" @click="getOrderList(1)">确定</el-button>
       </div>
+      <el-button type="primary" @click="getFile">导出</el-button>
     </div>
     <div class="container">
       <el-table :data="orderList" stripe style="width: 100%">
@@ -144,6 +145,7 @@
 </template>
 
 <script>
+import base from "@/api/base";
 import pagePagination from "@/components/common/pagePagination";
 export default {
   name: "index",
@@ -198,6 +200,14 @@ export default {
     handleEdit(row){
       this.dialogFormVisible = true
       this.orderForm = JSON.parse(JSON.stringify(row))
+    },
+    // 导出
+    getFile() {
+      let data = {
+        orderState: this.orderState,
+        orderId: this.orderId
+      }
+      window.open(`${base.url}/backManage/exportOrder?${this.$qs.stringify(data)}`, 'self')
     },
     // 订单详情
     handleDetail(row) {
@@ -260,6 +270,9 @@ export default {
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus" scoped>
+.content-bar
+  display flex
+  justify-content space-between
 .el-input
   width 300px
 </style>

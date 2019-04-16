@@ -45,6 +45,8 @@
             <span v-if="scope.row.sex == 1"> 男</span>
           </template>
         </el-table-column>
+        <el-table-column prop="phone" label="手机号" width="180">
+        </el-table-column>
         <el-table-column prop="sampleState" label="报告状态">
           <template slot-scope="scope">
             <span v-if="scope.row.sampleState == 0"> 等待结果</span>
@@ -62,6 +64,7 @@
                 >上传报告</el-button
               >
               <el-button type="info" size="small" @click="handleDetail(scope.row)">详情</el-button>
+              <el-button type="primary" size="small" @click="handleSample(scope.row)">报告解读</el-button>
             </el-button-group>
           </template>
         </el-table-column>
@@ -126,6 +129,17 @@
         <el-button type="primary" @click="dialogDetailVisible = false">确 定</el-button>
       </div>
     </el-dialog>
+    <el-dialog title="解读报告" :visible.sync="dialogSampleVisible">
+      <el-form :model="Sample">
+        <el-form-item label="解读报告" :label-width="formLabelWidth">
+          <el-input type="textarea" v-model="Sample.reportInterpretation" :rows="2" auto-complete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogSampleVisible = false">取 消</el-button>
+        <el-button type="primary" @click="reportInterpretation">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -172,7 +186,9 @@ export default {
       dialogDetailVisible: false,
       detail: {
         userInfo: {}
-      }
+      },
+      dialogSampleVisible: false,
+      Sample: {}
     };
   },
   methods: {
@@ -195,6 +211,25 @@ export default {
       if(fileList.length > 0) {
         this.orderForm.url = fileList[0].url
       }
+    },
+    // 报告解读
+    handleSample(row) {
+      this.Sample.sampleId = row.id
+      this.dialogSampleVisible = true
+    },
+    // 提交
+    reportInterpretation(){
+      if(!this.Sample.reportInterpretation){
+        return this.$message.error('解读不能为空')
+      }
+      let data = {
+        id: this.Sample.sampleId,
+        reportInterpretation: this.Sample.reportInterpretation,
+      }
+      this.$axios.reportInterpretation(data).then( res => {
+        this.$message.success('保存成功')
+        this.dialogSampleVisible = false
+      })
     },
     //上传报告
     saveSample() {

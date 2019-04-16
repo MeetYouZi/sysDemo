@@ -120,7 +120,10 @@ const http = {
   changePassword(data) {
     return axios.post("/backManage/changePassword", JSON.stringify(data));
   },
-
+  // 报告解读
+  reportInterpretation(data) {
+    return axios.post("/backManage/reportInterpretation", JSON.stringify(data));
+  },
 
 };
 export default http;

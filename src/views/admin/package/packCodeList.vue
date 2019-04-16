@@ -45,7 +45,7 @@
         @handleCurrentChange="handleCurrentChange"
       ></page-pagination>
     </div>
-    <el-dialog title="收货地址" :visible.sync="dialogFormVisible" width="600px">
+    <el-dialog title="生成资格码" :visible.sync="dialogFormVisible" width="600px">
       <el-form>
         <el-form-item label="资格码数" :label-width="formLabelWidth">
           <el-input placeholder="请输入资格码数" v-model="num" autocomplete="off"></el-input>

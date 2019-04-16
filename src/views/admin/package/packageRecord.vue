@@ -15,6 +15,7 @@
         </div>
         <el-button type="primary" @click="getBuyPackageRecord(1)">确定</el-button>
       </div>
+      <el-button type="primary" @click="getFile">导出</el-button>
     </div>
     <div class="container">
       <el-table :data="buyPackageRecordsList" stripe style="width: 100%">
@@ -42,6 +43,7 @@
 </template>
 
 <script>
+import base from "@/api/base";
 import pagePagination from "@/components/common/pagePagination";
 export default {
   name: "membersList",
@@ -67,6 +69,14 @@ export default {
       this.pageNum = val;
       this.getBuyPackageRecord(val);
     },
+    // 导出
+    getFile() {
+      let data = {
+        nickName: this.nickName,
+        code: this.code
+      }
+      window.open(`${base.url}/backManage/exportPackageBuyRec?${this.$qs.stringify(data)}`, 'self')
+    },
     // 获取列表
     getBuyPackageRecord(pageNum) {
       let currentPage = pageNum ? pageNum : 1;
@@ -90,6 +100,9 @@ export default {
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus" scoped>
+.content-bar
+  display flex
+  justify-content space-between
 .addBar
   display flex
   justify-content flex-end
