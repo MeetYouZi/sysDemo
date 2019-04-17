@@ -2,6 +2,7 @@
   <div>
     <h4>会员等级</h4>
     <div class="container mgt10">
+      <el-button type="primary" @click="handleExplain">会员等级说明</el-button>
       <div class="mgb20 addBar">
         <el-button type="primary" @click="addLevelItem" plain>新增</el-button>
       </div>
@@ -142,10 +143,7 @@
               trigger: 'blur'
             }"
           >
-            <el-input
-              v-model="item.num"
-              autocomplete="off"
-            ></el-input>
+            <el-input v-model="item.num" autocomplete="off"></el-input>
           </el-form-item>
           <i
             v-if="!isEdit"
@@ -225,9 +223,21 @@
         <el-button @click="handleClose">取 消</el-button>
         <el-button
           type="primary"
-          @click="handleAddLevel('levelForm', 'RewardList','CouponIdList')"
+          @click="handleAddLevel('levelForm', 'RewardList', 'CouponIdList')"
           >确 定</el-button
         >
+      </div>
+    </el-dialog>
+    <el-dialog
+      title="会员等级说明"
+      :close-on-click-modal="false"
+      :visible.sync="dialogEditVisible"
+      width="800px"
+    >
+      <editor @catchData="catchData" :content="levelDesc"></editor>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogEditVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleWangEditor">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -235,10 +245,12 @@
 
 <script>
 import pagePagination from "@/components/common/pagePagination";
+import Editor from "@/components/common/Editor";
 export default {
   name: "membersList",
   components: {
-    pagePagination
+    pagePagination,
+    Editor
   },
   data() {
     return {
@@ -260,9 +272,7 @@ export default {
         levelName: [
           { required: true, message: "请输入等级名称", trigger: "blur" }
         ],
-        teamPerson: [
-          { required: true, message: "请选择", trigger: "change" }
-        ]
+        teamPerson: [{ required: true, message: "请选择", trigger: "change" }]
       },
       RewardList: {
         RewardList: []
@@ -270,18 +280,43 @@ export default {
       CouponIdList: {
         CouponIdList: []
       },
-      detail: {}
+      detail: {},
+      dialogEditVisible: false,
+      levelDesc: "",
+      contnet: ""
     };
   },
   methods: {
-    handleClose(){
+    handleClose() {
       this.resetForm();
-      this.dialogLeveVisible = false
+      this.dialogLeveVisible = false;
     },
-    resetForm(){
+    resetForm() {
       this.$refs["levelForm"].resetFields();
       this.$refs["RewardList"].resetFields();
       this.$refs["CouponIdList"].resetFields();
+    },
+    // 会员等级说明
+    handleExplain() {
+      this.getLevelDesc()
+      this.dialogEditVisible = true
+    },
+    handleWangEditor(){
+      let data = {
+        desc: this.contnet
+      }
+      this.$axios.saveLevelDesc(data).then( res => {
+        this.$message.success('操作成功')
+        this.dialogEditVisible = false
+      })
+    },
+    catchData(val){
+      this.contnet = val
+    },
+    getLevelDesc(){
+      this.$axios.getLevelDesc({}).then( res => {
+        this.levelDesc = res.data.levelDesc
+      })
     },
     // 添加直属等级
     addReward() {
@@ -344,7 +379,7 @@ export default {
     handleAddLevel(formName, RewardList, CouponIdList) {
       var isRewardList = false;
       var isformName = false;
-      var isCouponIdList = false
+      var isCouponIdList = false;
       this.$refs[CouponIdList].validate(valid => {
         if (valid) {
           isCouponIdList = true;
@@ -378,7 +413,7 @@ export default {
         };
         this.CouponIdList.CouponIdList.push(manageReward);
         let data = {
-          levelId: this.LeveForm.levelId,
+          levelId: this.LeveForm.id,
           teamPerson: this.LeveForm.teamPerson,
           levelName: this.LeveForm.levelName,
           accomplishMinVal: this.LeveForm.accomplishMinVal,
@@ -394,7 +429,7 @@ export default {
     submit(data) {
       this.$axios.saveLevel(data).then(() => {
         this.dialogLeveVisible = false;
-        this.resetForm()
+        this.resetForm();
         this.$message.success("操作成功");
         this.getUserLevelList(1);
       });

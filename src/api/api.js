@@ -124,6 +124,14 @@ const http = {
   reportInterpretation(data) {
     return axios.post("/backManage/reportInterpretation", JSON.stringify(data));
   },
+  // 获取等级说明
+  getLevelDesc(data) {
+    return axios.post("/backManage/getLevelDesc", JSON.stringify(data));
+  },
+  // 修改等级说明
+  saveLevelDesc(data) {
+    return axios.post("/backManage/saveLevelDesc", JSON.stringify(data));
+  },
 
 };
 export default http;
