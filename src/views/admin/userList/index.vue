@@ -8,17 +8,6 @@
             <i slot="prefix" class="el-input__icon el-icon-search"></i>
           </el-input>
         </div>
-        <div class="searchInput">
-          <el-select v-model="type" placeholder="请选择" clearable>
-            <el-option
-              v-for="item in typeList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            >
-            </el-option>
-          </el-select>
-        </div>
         <el-button type="primary" @click="girAdminList(1)">确定</el-button>
         <el-button type="primary" @click="getAdminAdd">新增管理员</el-button>
       </div>
@@ -237,6 +226,7 @@ export default {
     getAdminAdd() {
       this.userForm = {};
       this.isEdit = false;
+      this.auth = []
       this.dialogTitle = "新增管理员";
       this.dialogFormVisible = true;
     },
