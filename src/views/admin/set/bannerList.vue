@@ -32,6 +32,12 @@
                 @click="handleEdit(scope.row)"
                 >编辑</el-button
               >
+              <el-button
+                type="danger"
+                size="small"
+                @click="handleDel(scope.row)"
+                >删除</el-button
+              >
             </el-button-group>
           </template>
         </el-table-column>
@@ -117,6 +123,29 @@ export default {
     handleImg(url) {
       this.dialogImageUrl = url;
       this.dialogVisible = true;
+    },
+    handleDel(row) {
+      let data = {
+        id: row.id
+      };
+      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$axios.delBanner(data).then(() => {
+            this.$message.success("操作成功");
+            this.dialogFormVisible = false;
+            this.getHomeBannerList(1);
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
     },
     handleEdit(row) {
       this.bannerForm = JSON.parse(JSON.stringify(row));

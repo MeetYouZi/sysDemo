@@ -132,6 +132,18 @@ const http = {
   saveLevelDesc(data) {
     return axios.post("/backManage/saveLevelDesc", JSON.stringify(data));
   },
+  // 管理员列表
+  adminList(data) {
+    return axios.post("/backManage/adminList", JSON.stringify(data));
+  },
+  // 新增编辑管理员
+  addAdmin(data) {
+    return axios.post("/backManage/addAdmin", JSON.stringify(data));
+  },
+  // 新增编辑管理员
+  delBanner(data) {
+    return axios.post("/backManage/delBanner", JSON.stringify(data));
+  },
 
 };
 export default http;

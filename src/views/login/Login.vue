@@ -63,7 +63,10 @@ export default {
           };
           this.$axios.login(data).then(res => {
             localStorage.setItem("ms_username", res.data.user.userName);
+            localStorage.setItem("auth", res.data.user.auth);
             this.changeToken(res.data.token);
+            let auth = res.data.user.authIds
+            this.changAuth(auth);
             this.$router.push("/membersList");
           });
         } else {
@@ -72,7 +75,7 @@ export default {
         }
       });
     },
-    ...mapMutations(["changeToken"])
+    ...mapMutations(["changeToken", "changAuth"])
   }
 };
 </script>

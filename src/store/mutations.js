@@ -4,5 +4,11 @@ export default {
     try {
       localStorage.token = token;
     } catch (e) {}
+  },
+  changAuth(state, auth) {
+    state.auth = auth;
+    try {
+      localStorage.auth = auth;
+    } catch (e) {}
   }
 };

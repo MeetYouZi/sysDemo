@@ -22,6 +22,7 @@ const packCodeList = () => import("@/views/admin/package/packCodeList");
 const couponsList = () => import("@/views/admin/couponsList/index");
 const bannerList = () => import("@/views/admin/set/bannerList");
 const modify = () => import("@/views/admin/set/modify");
+const userList = () => import("@/views/admin/userList/index");
 
 export default new Router({
   mode: "hash",
@@ -116,6 +117,11 @@ export default new Router({
           path: "/modify",
           component: modify,
           meta: { title: "修改密码" }
+        },
+        {
+          path: "/userList",
+          component: userList,
+          meta: { title: "管理员列表" }
         }
       ]
     },

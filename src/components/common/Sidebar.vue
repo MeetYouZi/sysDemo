@@ -10,7 +10,7 @@
       unique-opened
       router
     >
-      <template v-for="item in items">
+      <template v-for="item in slideList">
         <template v-if="item.subs">
           <el-submenu :index="item.index" :key="item.index">
             <template slot="title">
@@ -51,7 +51,7 @@
 
 <script>
 import bus from "../common/bus";
-
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -150,22 +150,38 @@ export default {
             {
               index: "modify",
               title: "修改密码"
+            },
+            {
+              index: "userList",
+              title: "管理员列表"
             }
           ]
         }
-      ]
+      ],
+      slideList: []
     };
   },
   computed: {
     onRoutes() {
       return this.$route.path.replace("/", "");
+    },
+    ...mapState(["auth"])
+  },
+  methods: {
+    getSlide() {
+      this.slideList = []
+      this.auth.forEach(item => {
+        this.slideList.push(this.items[item])
+      })
     }
   },
   created() {
+    this.getSlide()
     // 通过 Event Bus 进行组件间通信，来折叠侧边栏
     bus.$on("collapse", msg => {
       this.collapse = msg;
     });
+
   }
 };
 </script>

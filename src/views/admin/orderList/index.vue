@@ -105,6 +105,16 @@
         <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.contactPhone}}</div></el-col>
       </el-row>
       <el-row :gutter="20">
+        <el-col :span="4"><div class="grid-content bg-purple text-right">商品名称</div></el-col>
+        <el-col :span="18"><div class="grid-content bg-purple text-left">{{detail.orderItem.itemName}}</div></el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="4"><div class="grid-content bg-purple text-right">总价</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.orderItem.itemTotalMoney}}元</div></el-col>
+        <el-col :span="4"><div class="grid-content bg-purple text-right">数量</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.orderItem.itemNum}}</div></el-col>
+      </el-row>
+      <el-row :gutter="20">
         <el-col :span="4"><div class="grid-content bg-purple text-right">订单状态</div></el-col>
         <el-col :span="18"><div class="grid-content bg-purple text-left" v-if="detail.orderState == 0">待支付</div></el-col>
         <el-col :span="18"><div class="grid-content bg-purple text-left" v-if="detail.orderState == 1">待发货</div></el-col>
@@ -126,7 +136,7 @@
         <el-col :span="4"><div class="grid-content bg-purple text-right">优惠券名称</div></el-col>
         <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.userCoupon.couponName}}</div></el-col>
         <el-col :span="4"><div class="grid-content bg-purple text-right">优惠金额</div></el-col>
-        <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.userCoupon.amount}}</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.userCoupon.amount}}元</div></el-col>
       </el-row>
       <el-row :gutter="20" v-if="detail.userCoupon">
         <el-col :span="4"><div class="grid-content bg-purple text-right">优惠券类型</div></el-col>
@@ -187,7 +197,8 @@ export default {
       dialogFormVisible: false,
       dialogDetailVisible: false,
       detail: {
-        userCoupon: {}
+        userCoupon: {},
+        orderItem: {}
       }
     };
   },

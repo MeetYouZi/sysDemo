@@ -93,7 +93,7 @@
         </el-form-item>
         <el-form-item label="公益基金" :label-width="formLabelWidth">
           <el-input
-            v-model="LeveForm.manageRewardNum"
+            v-model="manageRewardNum"
             autocomplete="off"
           ></el-input>
         </el-form-item>
@@ -283,7 +283,8 @@ export default {
       detail: {},
       dialogEditVisible: false,
       levelDesc: "",
-      contnet: ""
+      contnet: "",
+      manageRewardNum: ""
     };
   },
   methods: {
@@ -355,7 +356,7 @@ export default {
       this.LeveForm.teamPerson = String(LeveForm.isTeamPerson);
       CouponIdList.forEach((item, index) => {
         if (item.couponId == "0") {
-          this.LeveForm.manageRewardNum = item.num;
+          this.manageRewardNum = item.num;
           CouponIdList.splice(index, 1);
         }
       });
@@ -406,8 +407,8 @@ export default {
       });
       if (isRewardList && isformName && isCouponIdList) {
         let manageReward = {
-          num: this.LeveForm.manageRewardNum
-            ? this.LeveForm.manageRewardNum
+          num: this.manageRewardNum
+            ? this.manageRewardNum
             : "",
           couponId: "0"
         };
