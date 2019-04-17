@@ -33,6 +33,22 @@ export default new Router({
       redirect: "/login"
     },
     {
+      path: "/members",
+      redirect: "/membersList"
+    },
+    {
+      path: "/product",
+      redirect: "/productList"
+    },
+    {
+      path: "/set",
+      redirect: "/bannerList"
+    },
+    {
+      path: "/package",
+      redirect: "/packageList"
+    },
+    {
       path: "/",
       name: "Home",
       component: Home,

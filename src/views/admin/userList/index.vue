@@ -192,7 +192,7 @@ export default {
         children: "children",
         label: "label"
       },
-      auth: [2, 3],
+      auth: [],
       isEdit: false,
       dialogPassVisible: false
     };
@@ -227,6 +227,7 @@ export default {
       this.userForm = {};
       this.isEdit = false;
       this.auth = []
+      this.$refs.tree.setCheckedKeys([]);
       this.dialogTitle = "新增管理员";
       this.dialogFormVisible = true;
     },
