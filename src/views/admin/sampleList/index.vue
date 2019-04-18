@@ -122,6 +122,10 @@
         <el-col :span="8"><div class="grid-content bg-purple text-left">{{detail.remark}}</div></el-col>
       </el-row>
       <el-row :gutter="20">
+        <el-col :span="4"><div class="grid-content bg-purple text-right">报告解读</div></el-col>
+        <el-col :span="18"><div class="grid-content bg-purple text-left">{{detail.reportInterpretation}}</div></el-col>
+      </el-row>
+      <el-row :gutter="20">
         <el-col :span="4"><div class="grid-content bg-purple text-right">报告链接</div></el-col>
         <el-col :span="18"><div class="grid-content bg-purple text-left">{{detail.resultUrl}}</div></el-col>
       </el-row>
