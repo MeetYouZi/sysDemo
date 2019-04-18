@@ -79,7 +79,7 @@
     <el-dialog title="上传报告" :visible.sync="dialogFormVisible">
       <el-form :model="orderForm">
         <el-form-item label="收件人" :label-width="formLabelWidth">
-          <vue-upload-file @uploadSuccess="uploadFile" :limitNum="1"></vue-upload-file>
+          <vue-upload-file @uploadSuccess="uploadFile" :fileList="fileList" :limitNum="1"></vue-upload-file>
         </el-form-item>
 
       </el-form>
@@ -188,7 +188,8 @@ export default {
         userInfo: {}
       },
       dialogSampleVisible: false,
-      Sample: {}
+      Sample: {},
+      fileList: []
     };
   },
   methods: {
@@ -203,9 +204,13 @@ export default {
       this.dialogDetailVisible = true
     },
     handleEdit(row) {
-      this.dialogFormVisible = true
+
       this.orderForm = JSON.parse(JSON.stringify(row));
-      console.log(this.orderForm)
+      this.fileList = [{
+        name: 'file',
+        url:  this.orderForm.url
+      }]
+      this.dialogFormVisible = true
     },
     uploadFile(fileList){
       if(fileList.length > 0) {

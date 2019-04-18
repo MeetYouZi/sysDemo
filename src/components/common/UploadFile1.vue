@@ -166,7 +166,7 @@ export default {
       console.log(res,'res')
       this.fileList.push({
         name: res.name,
-        url: `http://miux.oss-cn-beijing.aliyuncs.com/${res.name}`
+        url: `https://miux.oss-cn-beijing.aliyuncs.com/${res.name}`
       })
       this.$emit('uploadSuccess', this.fileList)
     }

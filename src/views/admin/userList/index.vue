@@ -227,9 +227,9 @@ export default {
       this.userForm = {};
       this.isEdit = false;
       this.auth = []
-      this.$refs.tree.setCheckedKeys([]);
       this.dialogTitle = "新增管理员";
       this.dialogFormVisible = true;
+      this.$refs.tree.setCheckedKeys([]);
     },
     // 保存
     saveAdmin(formName) {
