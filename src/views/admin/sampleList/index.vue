@@ -210,10 +210,10 @@ export default {
     handleEdit(row) {
 
       this.orderForm = JSON.parse(JSON.stringify(row));
-      this.fileList = [{
+      this.fileList = this.orderForm.url ? [{
         name: 'file',
         url:  this.orderForm.url
-      }]
+      }] : []
       this.dialogFormVisible = true
     },
     uploadFile(fileList){
