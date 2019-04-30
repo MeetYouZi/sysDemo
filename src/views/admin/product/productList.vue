@@ -386,7 +386,8 @@ export default {
       this.productForm = {
         itemId: '',
         homeShow: '0',
-        parentCategoryId: this.allItemCategoryList[this.parentCategoryIndex].id
+        parentCategoryId: this.allItemCategoryList[this.parentCategoryIndex].id,
+        categoryId: ""
       }
     },
     // 修改
@@ -446,13 +447,15 @@ export default {
     },
     // 选择一级分类
     selectParentCategory(){
+      console.log(this.productForm.categoryId,'this.productForm.categoryId')
+      this.productForm.categoryId = ''
       let index = this.parentCategoryIndex
       this.productForm.parentCategoryId = this.allItemCategoryList[index].id
-      this.productForm.categoryId = ''
       this.chilItemCategory = this.allItemCategoryList[index].chilItemCategory
+      console.log(this.productForm.categoryId,'this.productForm.categoryId1')
     },
     selectcategoryId(){
-
+      console.log(this.productForm.categoryId,'xuanz')
     },
     // 获取商品列表
     getItemList(pageNum) {
